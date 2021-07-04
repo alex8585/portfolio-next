@@ -5,6 +5,7 @@ import {
   PORTFOLIO_LIST_FAIL,
 } from "../constants/portfolioConstants"
 
+
 export const listPortfolios =
   (page = "", perPage = "", tags = []) =>
   async (dispatch) => {
@@ -23,11 +24,14 @@ export const listPortfolios =
         page,
         filter,
       }
+
       let { data } = await getList("portfolios", params)
+
       dispatch({
         type: PORTFOLIO_LIST_SUCCESS,
         payload: data,
       })
+      
     } catch (error) {
       dispatch({
         type: PORTFOLIO_LIST_FAIL,
@@ -38,4 +42,6 @@ export const listPortfolios =
       })
     }
   }
+
+  
 export default listPortfolios

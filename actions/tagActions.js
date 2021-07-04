@@ -4,19 +4,15 @@ import {
   TAG_LIST_REQUEST,
   TAG_LIST_SUCCESS,
   TAG_LIST_FAIL,
-  SET_ACTIVE_TAG,
+  SET_ACTIVE_TAGS
 } from "../constants/tagConstants"
 
-export const filterByTags = (id) => async (dispatch) => {
-  try {
+export const filterByTags = (tags) => (dispatch) => {
     dispatch({
-      type: SET_ACTIVE_TAG,
-      payload: id,
+      type: SET_ACTIVE_TAGS,
+      payload: tags,
     })
-  } catch (error) {}
 }
-
-
 
 export const listTags =
   (page = "", perPage = "") =>
@@ -32,8 +28,8 @@ export const listTags =
       //console.log(data )
       dispatch({
         type: TAG_LIST_SUCCESS,
-        payload: data,
-      })
+        payload: data  }
+      )
     } catch (error) {
       dispatch({
         type: TAG_LIST_FAIL,

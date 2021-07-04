@@ -1,5 +1,5 @@
 
-import  React,{ useEffect } from "react"
+ import  React from "react"
 
 import Button from "@material-ui/core/Button"
 import Card from "@material-ui/core/Card"
@@ -29,7 +29,7 @@ import Footer from "../components/Footer"
 
 import Chip from "@material-ui/core/Chip"
 import Paper from "@material-ui/core/Paper"
-import { initializeStore } from '../store'
+// import { initializeStore } from '../store'
 import { wrapper } from '../store'
 
 const useStyles = makeStyles((theme) => ({
@@ -118,8 +118,6 @@ const Index = ({ match, location, history }) => {
   const classes = useStyles()
 
   const dispatch = useDispatch()
-  //let i = useParams()
-  //let query = useQuery()
 
   const portfolioList = useSelector((state) => state.portfolioList)
   const { data: tags, loading: tagsloading } = useSelector(
@@ -127,27 +125,36 @@ const Index = ({ match, location, history }) => {
   )
   const { data, page, pages, loading } = portfolioList
 
-  useEffect(() => {
-    // dispatch(listTags(1))
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatch(listTags(1))
+  // }, [dispatch])
 
-  useEffect(() => {
-    if(!tags.length) return    
-     dispatch(listPortfolios(1, 6, tags))
-  }, [dispatch, tags])
+  // useEffect(() => {
+  //   if(!tags.length) return    
+  //   dispatch(listPortfolios(1, 6, tags))
+  // }, [dispatch, tags])
 
   let handleChangePage = (event, value) => {
     dispatch(listPortfolios(value, 6, tags))
   }
 
-  let handletagFilter = (id) => {
-    dispatch(filterByTags(id))
-    //dispatch(listPortfolios(1, 6, tags))
+  let handletagFilter = async (id) => {
+    let newTags = [...tags].map((tag) => {
+      if (tag.id === id) {
+        return {
+          ...tag,
+          active: !tag.active
+        }
+      }
+      return tag
+    })
+    dispatch(filterByTags(newTags))
+    dispatch(listPortfolios(1, 6, newTags))
   }
 
   if (!data.length ) return "loading..."
   return (
-    <React.Fragment>
+    <React.Fragment >
       <CssBaseline />
       <TopMenu />
 
@@ -169,10 +176,10 @@ const Index = ({ match, location, history }) => {
         ></Typography>
       </Container>
       {/* End hero unit */}
-      <Container maxWidth="md" component="main">
+      <Container  suppressHydrationWarning={true}  maxWidth="md" component="main">
         <ul className={classes.paper}>
           {[...tags]
-            .sort((a, b) => (a.order_number > b.order_number ? 1 : -1))
+            //.sort((a, b) => (a.order_number > b.order_number ? 1 : -1))
             .map((tag) => {
               return (
                 <li key={tag.id} className={tag.active ? "active" : ""}>
@@ -214,9 +221,9 @@ const Index = ({ match, location, history }) => {
                   </CardActions> */}
                   <Paper component="ul" className={classes.paper}>
                     {[...portfolio.tags]
-                      .sort((a, b) =>
-                        a.order_number > b.order_number ? 1 : -1
-                      )
+                     // .sort((a, b) =>
+                      //  a.order_number > b.order_number ? 1 : -1
+                      //)
                       .map((tag) => {
                         return (
                           <li key={tag.id}>
@@ -267,10 +274,11 @@ const Index = ({ match, location, history }) => {
   )
 }
 
-export const getStaticProps = wrapper.getStaticProps(store =>
-    ({preview}) => {
+export const getServerSideProps =  wrapper.getServerSideProps( (store) => 
+    async ({preview}) => {
       // console.log('2. Page.getStaticProps uses the store to dispatch things');
-      store.dispatch(listTags(1))
+      await store.dispatch( listTags(1))
+      await store.dispatch(listPortfolios(1, 6))
     }
 );
 
