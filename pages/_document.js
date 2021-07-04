@@ -1,7 +1,7 @@
 import  React from "react"
 import Document from 'next/document'
 import { ServerStyleSheet as StyledComponentSheets } from 'styled-components'
-import { ServerStyleSheets as MaterialUiServerStyleSheets } from '@material-ui/core/styles'
+import { ServerStyleSheets as MaterialUiServerStyleSheets } from '@material-ui/styles'
 import flush from 'styled-jsx/server'
 
 export default class MyDocument extends Document {

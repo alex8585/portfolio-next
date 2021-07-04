@@ -5,8 +5,9 @@ import CssBaseline from "@material-ui/core/CssBaseline"
 import Grid from "@material-ui/core/Grid"
 
 import Typography from "@material-ui/core/Typography"
+ import { makeStyles } from "@material-ui/styles"
 
-import { makeStyles } from "@material-ui/core/styles"
+//import { makeStyles } from "@material-ui/core/styles"
 
 import { useDispatch, useSelector } from "react-redux"
 import List from "@material-ui/core/List"
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 50,
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: "12px",
     marginTop: 20,
     maxWidth: 960,
   },
@@ -44,11 +45,11 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "100%",
   },
   large: {
-    width: theme.spacing(15),
-    height: theme.spacing(15),
+    width: "120px",
+    height: "120px",
   },
   heroContent: {
-    padding: theme.spacing(3, 0, 3),
+    padding: "20px 0px 5px",
   },
   ListItemText: {
     "& .MuiTypography-body2": {
@@ -74,7 +75,7 @@ const About = ({ match, location, history }) => {
           About me
         </Typography>
       </Container>
-      <Container maxWidth="md" component="main">
+      <Container  maxWidth="md" component="main" className={classes.heroContent}>
         <Grid container spacing={2}>
           <Grid item>
             <ButtonBase className={classes.image}>

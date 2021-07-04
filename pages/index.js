@@ -11,7 +11,8 @@ import Grid from "@material-ui/core/Grid"
 
 import Typography from "@material-ui/core/Typography"
 
-import { makeStyles } from "@material-ui/core/styles"
+// import { makeStyles } from "@material-ui/core/styles"
+ import { makeStyles } from "@material-ui/styles"
 import Container from "@material-ui/core/Container"
 
 import { useDispatch, useSelector } from "react-redux"
@@ -19,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { listTags, filterByTags } from "../actions/tagActions"
 
 import { listPortfolios } from "../actions/portfolioActions"
-import Pagination from "@material-ui/lab/Pagination"
+import Pagination from "@material-ui/core/Pagination"
 
 import CardMedia from "@material-ui/core/CardMedia"
 
@@ -42,52 +43,55 @@ const useStyles = makeStyles((theme) => ({
   },
 
   link: {
-    margin: theme.spacing(1, 1.5),
+    margin: "5px 0px",
   },
   heroContent: {
-    padding: theme.spacing(3, 0, 3),
+    padding: "20px 0px 5px",
+    maxWidth:"960px",
+    "& li div": {backgroundColor: "#e0e0e0"}
   },
-  cardHeader: {
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[200]
-        : theme.palette.grey[700],
-  },
-  cardPricing: {
+    cardHeader: {
+      backgroundColor: "#e0e0e0",
+      marginBottom: "10px"
+      //theme.palette.type === "light"
+        //theme.palette.grey[200]
+        //: theme.palette.grey[700],
+    },
+  cardPricing: (props) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "baseline",
-    marginBottom: theme.spacing(2),
-  },
+    marginBottom: "15px",
+  }),
 
-  chip: {
-    margin: theme.spacing(0.5),
-  },
+  chip:(props) => ( {
+    margin: "0px 5px",
+  }),
   root: {
     maxWidth: 345,
   },
-  paper: {
+  paper: (props) => ( {
     display: "flex",
     justifyContent: "center",
     flexWrap: "wrap",
     listStyle: "none",
-    padding: theme.spacing(0.5),
-    margin: 0,
+    padding: "7px 10px",
+    marginBottom: 12,
     "& .active .MuiButtonBase-root": {
       backgroundColor: "rgb(144, 131, 112)",
     },
-  },
+  }),
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
   },
-  expand: {
+  expand: (props) => ( {
     transform: "rotate(0deg)",
     marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
+    // transition: theme.transitions.create("transform", {
+    //   duration: theme.transitions.duration.shortest,
+    // }),
+  }),
   expandOpen: {
     transform: "rotate(180deg)",
   },
@@ -95,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
   button: {
-    marginTop: "5px",
+    marginTop: "15px",
     width: "100%",
     textAlign: "center",
   },
@@ -176,7 +180,7 @@ const Index = ({ match, location, history }) => {
         ></Typography>
       </Container>
       {/* End hero unit */}
-      <Container  suppressHydrationWarning={true}  maxWidth="md" component="main">
+      <Container  maxWidth="md" component="main" className={classes.heroContent}>
         <ul className={classes.paper}>
           {[...tags]
             //.sort((a, b) => (a.order_number > b.order_number ? 1 : -1))
@@ -197,7 +201,7 @@ const Index = ({ match, location, history }) => {
             // Enterprise card is full width at sm breakpoint
             <Grid item key={portfolio.name} xs={12} sm={6} md={4}>
               <Card className={classes.root}>
-                <CardHeader title={portfolio.name} subheader="" />
+                <CardHeader title={portfolio.name} subheader="" className={classes.cardHeader}/>
                 <CardMedia
                   className={classes.media}
                   image={portfolio.img}
