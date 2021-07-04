@@ -1,10 +1,20 @@
 import { useMemo } from 'react'
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware,combineReducers } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'
-import reducers from './reducers'
+// import reducers from './reducers'
+import { portfolioListReducer } from "./reducers/portfolioReducers"
 
+import { tagListReducer } from "./reducers/tagReducers"
 let store
+
+
+const reducers = combineReducers({
+  tagList: tagListReducer,
+  portfolioList: portfolioListReducer,
+})
+
+
 
 function initStore(initialState) {
   return createStore(
@@ -40,3 +50,6 @@ export function useStore(initialState) {
   const store = useMemo(() => initializeStore(initialState), [initialState])
   return store
 }
+
+
+
