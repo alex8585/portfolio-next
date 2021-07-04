@@ -26,12 +26,14 @@ export const tagListReducer = produce((draft, action) => {
       draft.data = []
       break
     case TAG_LIST_SUCCESS:
+      console.log(action.payload.data)
       draft.loading = false
       draft.data = action.payload.data
       draft.pages = action.payload.pages
       draft.ipage = action.payload.page
       draft.total = action.payload.total
       draft.perPage = action.payload.perPage
+      
       break
     case TAG_LIST_FAIL:
       draft.loading = false

@@ -2,10 +2,9 @@ import React from "react"
 import Typography from "@material-ui/core/Typography"
 import AppBar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
-//import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles"
-//import Link from "@material-ui/core/Link"
-import { NavLink } from "react-router-dom"
+import Link from 'next/link'
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -17,15 +16,16 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   link: {
-    //margin: theme.spacing(1, 1.5),
-    fontSize: "0.875rem",
-    fontWeight: "600",
-    lineHeight: "1.75",
-    letterSpacing: "0.02857em",
-    textTransform: "uppercase",
-    color: "rgba(0, 0, 0, 0.87)",
-    margin: "8px 12px",
-    textDecoration: "none",
+    "& a":{
+      fontSize: "0.875rem",
+      fontWeight: "600",
+      lineHeight: "1.75",
+      letterSpacing: "0.02857em",
+      textTransform: "uppercase",
+      color: "rgba(0, 0, 0, 0.87)",
+      margin: "8px 12px",
+      textDecoration: "none",
+    }
   },
 }))
 
@@ -47,23 +47,19 @@ const TopMenu = () => {
         >
           Alex85 programmer
         </Typography>
-        <nav>
-          <NavLink
-            variant="button"
-            color="textPrimary"
-            to="/"
-            className={classes.link}
+        <nav className={classes.link}  >
+           
+          <Link
+            href="/"
+            
           >
             Portfolio
-          </NavLink>
-          <NavLink
-            variant="button"
-            color="textPrimary"
-            to="/about"
-            className={classes.link}
+          </Link>
+          <Link
+            href="/about"
           >
             About me
-          </NavLink>
+          </Link>
         </nav>
         {/* <Button
           href="#"

@@ -1,25 +1,4 @@
-// import { useEffect } from 'react'
-// import { useDispatch } from 'react-redux'
-// import Link from 'next/link'
-// // import { startClock } from '../actions'
-// import Examples from '../components/examples'
 
-// const Index = () => {
-//   const dispatch = useDispatch()
-//   // useEffect(() => {
-//   //   dispatch(startClock())
-//   // }, [dispatch])
-
-//   return (
-//     <>
-//       <Link href="/show-redux-state">
-//         <a>Click to see current Redux State</a>
-//       </Link>
-//     </>
-//   )
-// }
-
-// export default Index
 import  React,{ useEffect } from "react"
 
 import Button from "@material-ui/core/Button"
@@ -45,11 +24,13 @@ import Pagination from "@material-ui/lab/Pagination"
 import CardMedia from "@material-ui/core/CardMedia"
 
 import { red } from "@material-ui/core/colors"
-//import TopMenu from "../components/TopMenu"
+import TopMenu from "../components/TopMenu"
 import Footer from "../components/Footer"
 
 import Chip from "@material-ui/core/Chip"
 import Paper from "@material-ui/core/Paper"
+import { initializeStore } from '../store'
+import { wrapper } from '../store'
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -147,12 +128,12 @@ const Index = ({ match, location, history }) => {
   const { data, page, pages, loading } = portfolioList
 
   useEffect(() => {
-    dispatch(listPortfolios(1, 6))
-    dispatch(listTags(1))
+    // dispatch(listTags(1))
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(listPortfolios(1, 6, tags))
+    if(!tags.length) return    
+     dispatch(listPortfolios(1, 6, tags))
   }, [dispatch, tags])
 
   let handleChangePage = (event, value) => {
@@ -164,11 +145,11 @@ const Index = ({ match, location, history }) => {
     //dispatch(listPortfolios(1, 6, tags))
   }
 
-  if (loading || tagsloading) return "loading..."
+  if (!data.length ) return "loading..."
   return (
     <React.Fragment>
       <CssBaseline />
-      {/* <TopMenu /> */}
+      <TopMenu />
 
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
         <Typography
@@ -285,8 +266,24 @@ const Index = ({ match, location, history }) => {
     </React.Fragment>
   )
 }
-export async function getStaticProps() {
 
-  return { props: {} }
-}
+export const getStaticProps = wrapper.getStaticProps(store =>
+    ({preview}) => {
+      // console.log('2. Page.getStaticProps uses the store to dispatch things');
+      store.dispatch(listTags(1))
+    }
+);
+
+// export function getServerSideProps() {
+  // const reduxStore = initializeStore()
+  // const { dispatch } = reduxStore
+  // dispatch(listTags(1))
+  // return { props: { initialReduxState: reduxStore.getState() } }
+//   // return { props: {} }
+// }
+// export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
+ //  store.dispatch(listTags(1))
+ // store.dispatch(serverRenderClock(true))
+  //store.dispatch(addCount())
+// })
 export default Index

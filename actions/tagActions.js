@@ -16,9 +16,12 @@ export const filterByTags = (id) => async (dispatch) => {
   } catch (error) {}
 }
 
+
+
 export const listTags =
   (page = "", perPage = "") =>
   async (dispatch) => {
+    //console.log('1111')
     try {
       dispatch({ type: TAG_LIST_REQUEST })
       let params = {
@@ -26,7 +29,7 @@ export const listTags =
         page,
       }
       let { data } = await getList("tags", params)
-
+      //console.log(data )
       dispatch({
         type: TAG_LIST_SUCCESS,
         payload: data,
