@@ -9,13 +9,11 @@ const App = function ({ Component, pageProps }) {
 
   return (
     <>
-    
     <Head>
       <link rel="favicon icon" href="favicon.ico" />
     </Head>
       <Component {...pageProps} />
       </>
- 
   )
 }
 export default wrapper.withRedux(App);

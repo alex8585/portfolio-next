@@ -265,8 +265,8 @@ const Index = ({ match, location, history }) => {
         </Grid>
         <div className={classes.paginatorContainer}>
           <Pagination
-            page={page}
-            count={pages}
+            page={parseInt(page)}
+            count={parseInt(pages)}
             onChange={handleChangePage}
             className={classes.pagination}
           />
