@@ -7,7 +7,7 @@ function getUrl() {
   if (process.env.NEXT_PUBLIC_ENV !== "development") {
     url = process.env.NEXT_PUBLIC_API_URL
   }
-  console.log(url)
+  //console.log(url)
   return url
 }
 
