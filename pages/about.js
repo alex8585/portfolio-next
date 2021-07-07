@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react"
+import React from "react"
 
 import CssBaseline from "@material-ui/core/CssBaseline"
 import Grid from "@material-ui/core/Grid"
@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 const About = ({ match, location, history }) => {
   const classes = useStyles()
 
+  
   return (
     <React.Fragment>
       <CssBaseline />

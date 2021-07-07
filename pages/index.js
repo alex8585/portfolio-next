@@ -1,5 +1,5 @@
 
- import  React from "react"
+ import  React,{useEffect} from "react"
 
 import Button from "@material-ui/core/Button"
 import Card from "@material-ui/core/Card"
@@ -280,22 +280,9 @@ const Index = ({ match, location, history }) => {
 
 export const getServerSideProps =  wrapper.getServerSideProps( (store) => 
     async ({preview}) => {
-      // console.log('2. Page.getStaticProps uses the store to dispatch things');
       await store.dispatch( listTags(1))
       await store.dispatch(listPortfolios(1, 6))
     }
 );
 
-// export function getServerSideProps() {
-  // const reduxStore = initializeStore()
-  // const { dispatch } = reduxStore
-  // dispatch(listTags(1))
-  // return { props: { initialReduxState: reduxStore.getState() } }
-//   // return { props: {} }
-// }
-// export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
- //  store.dispatch(listTags(1))
- // store.dispatch(serverRenderClock(true))
-  //store.dispatch(addCount())
-// })
 export default Index

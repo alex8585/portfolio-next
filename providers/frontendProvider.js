@@ -3,11 +3,15 @@ import axios from "axios"
 function getUrl() {
   //console.log(process.env.NEXT_PUBLIC_ENV);
 
-  let url = process.env.NEXT_PUBLIC_LOCAL_API_URL
-  if (process.env.NEXT_PUBLIC_ENV !== "development") {
-    url = process.env.NEXT_PUBLIC_API_URL
+  // let url = process.env.NEXT_PUBLIC_LOCAL_API_URL
+  // if (process.env.NEXT_PUBLIC_ENV !== "development") {
+  //   url = process.env.NEXT_PUBLIC_API_URL
+  // }
+ let url = process.env.NEXT_PUBLIC_LOCAL_API_URL
+  if(typeof window === "undefined") {
+    console.log(url)
+
   }
-  //console.log(url)
   return url
 }
 
