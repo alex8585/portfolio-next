@@ -2,6 +2,7 @@ import mongoose from '../../middleware/mongoose.js';
 import prepareQuery from '../../middleware/prepareQuery.js';
 import Portfolio from '../../models/portfolioModel.js'
 import nextConnect from "next-connect";
+import Tag from '../../models/tagModel.js'
 
 const handler = nextConnect();
 
