@@ -21,10 +21,10 @@ export const tagListReducer = produce((draft, action) => {
     case TAG_LIST_SUCCESS:
       draft.loading = false
       draft.data = action.payload.data
-      draft.pages = action.payload.pages
-      draft.ipage = action.payload.page
-      draft.total = action.payload.total
-      draft.perPage = action.payload.perPage
+      // draft.pages = action.payload.pages
+      // draft.ipage = action.payload.page
+      // draft.total = action.payload.total
+      // draft.perPage = action.payload.perPage
       
       break
     case TAG_LIST_FAIL:

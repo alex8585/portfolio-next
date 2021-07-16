@@ -15,8 +15,8 @@ handler.get(async (req, res) => {
     const data = await Tag.find(filterObj).limit(perPage).skip(skip).sort(sortObj)
 
     res.json({
-        total ,
-        data ,
+        total,
+        data,
     })
 })
 

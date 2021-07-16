@@ -14,6 +14,18 @@ export const filterByTags = (tags) => (dispatch) => {
     })
 }
 
+export const setTags = (data) => async (dispatch) => {
+    if(!data) return
+    await dispatch({
+        type: TAG_LIST_SUCCESS,
+        payload: {
+          data:data
+        }
+    })
+}
+
+
+
 export const listTags =
   (page = "", perPage = "") =>
   async (dispatch) => {

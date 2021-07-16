@@ -1,5 +1,5 @@
 
- import  React,{useEffect} from "react"
+import  React,{useEffect} from "react"
 
 import Button from "@material-ui/core/Button"
 import Card from "@material-ui/core/Card"
@@ -11,15 +11,14 @@ import Grid from "@material-ui/core/Grid"
 
 import Typography from "@material-ui/core/Typography"
 
-// import { makeStyles } from "@material-ui/core/styles"
- import { makeStyles } from "@material-ui/styles"
+import { makeStyles } from "@material-ui/styles"
 import Container from "@material-ui/core/Container"
 
 import { useDispatch, useSelector } from "react-redux"
 
-import { listTags, filterByTags } from "../actions/tagActions"
+import { filterByTags, setTags } from "../actions/tagActions"
 
-import { listPortfolios } from "../actions/portfolioActions"
+import { listPortfolios,setPortfolios } from "../actions/portfolioActions"
 import Pagination from "@material-ui/core/Pagination"
 
 import CardMedia from "@material-ui/core/CardMedia"
@@ -30,8 +29,14 @@ import Footer from "../components/Footer"
 
 import Chip from "@material-ui/core/Chip"
 import Paper from "@material-ui/core/Paper"
-// import { initializeStore } from '../store'
 import { wrapper } from '../store'
+import dbConnect from '../utils/dbConnect';
+import Tag from '../models/tagModel.js'
+
+import Portfolio from '../models/portfolioModel.js'
+
+import { calcPages } from "../utils/utils.js"
+import Image from 'next/image'
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -118,7 +123,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Index = ({ match, location, history }) => {
+const perPage = 6;
+
+const Index = ({ match, location, history,staticTags }) => {
   const classes = useStyles()
 
   const dispatch = useDispatch()
@@ -127,11 +134,15 @@ const Index = ({ match, location, history }) => {
   const { data: tags, loading: tagsloading } = useSelector(
     (state) => state.tagList
   )
-  const { data, page, pages, loading } = portfolioList
+  const { data, page, total, loading } = portfolioList
 
-  // useEffect(() => {
-  //   dispatch(listTags(1))
-  // }, [dispatch])
+  //staticTags = 
+  //console.log(staticTags)
+  let countPages = calcPages(perPage, total) 
+  
+   //useEffect(() => {
+     //dispatch(listTags(1))
+   //}, [dispatch])
 
   // useEffect(() => {
   //   if(!tags.length) return    
@@ -139,7 +150,7 @@ const Index = ({ match, location, history }) => {
   // }, [dispatch, tags])
 
   let handleChangePage = (event, value) => {
-    dispatch(listPortfolios(value, 6, tags))
+    dispatch(listPortfolios(value, perPage, tags))
   }
 
   let handletagFilter = async (id) => {
@@ -153,7 +164,7 @@ const Index = ({ match, location, history }) => {
       return tag
     })
     dispatch(filterByTags(newTags))
-    dispatch(listPortfolios(1, 6, newTags))
+    dispatch(listPortfolios(1, perPage, newTags))
   }
 
   if (!data.length ) return "loading..."
@@ -179,7 +190,6 @@ const Index = ({ match, location, history }) => {
           component="p"
         ></Typography>
       </Container>
-      {/* End hero unit */}
       <Container  maxWidth="md" component="main" className={classes.heroContent}>
         <ul className={classes.paper}>
           {[...tags]
@@ -202,11 +212,17 @@ const Index = ({ match, location, history }) => {
             <Grid item key={portfolio.name} xs={12} sm={6} md={4}>
               <Card className={classes.root}>
                 <CardHeader title={portfolio.name} subheader="" className={classes.cardHeader}/>
-                <CardMedia
+                <Image
+        src={ "/" + portfolio.img}
+        alt={portfolio.name}
+        width={400}
+        height={300}
+      />
+               {/* <CardMedia
                   className={classes.media}
                   image={portfolio.img}
-                  title="Paella dish"
-                />
+                  title={portfolio.name}
+                />  */}
                 <CardContent>
                   <Typography
                     variant="body2"
@@ -215,15 +231,7 @@ const Index = ({ match, location, history }) => {
                   >
                     {portfolio.description ? portfolio.description : ""}
                   </Typography>
-                  {/* <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="share">
-                      <ShareIcon />
-                    </IconButton>
-                  </CardActions> */}
-                  <Paper component="ul" className={classes.paper}>
+                 <Paper component="ul" className={classes.paper}>
                     {[...portfolio.tags]
                      // .sort((a, b) =>
                       //  a.order_number > b.order_number ? 1 : -1
@@ -266,7 +274,7 @@ const Index = ({ match, location, history }) => {
         <div className={classes.paginatorContainer}>
           <Pagination
             page={parseInt(page)}
-            count={parseInt(pages)}
+            count={parseInt(countPages)}
             onChange={handleChangePage}
             className={classes.pagination}
           />
@@ -278,10 +286,22 @@ const Index = ({ match, location, history }) => {
   )
 }
 
-export const getServerSideProps =  wrapper.getServerSideProps( (store) => 
+export const getStaticProps =  wrapper.getStaticProps( (store) => 
     async ({preview}) => {
-      await store.dispatch( listTags(1))
-      await store.dispatch(listPortfolios(1, 6))
+      await dbConnect()
+      let tags = await Tag.find().limit(perPage)
+      const total = await Portfolio.countDocuments()
+      let portfolios = await Portfolio.find().limit(perPage).sort({ order_number: 1 }).populate("tags")
+
+      portfolios = JSON.parse(JSON.stringify(portfolios))
+      tags = JSON.parse(JSON.stringify(tags))
+
+      await store.dispatch(setTags(tags))
+      await store.dispatch(setPortfolios(portfolios, perPage, total))
+      
+      return null 
+     
+      
     }
 );
 

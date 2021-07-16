@@ -3,9 +3,9 @@ import mongoose from 'mongoose'
 const DATABASE_URI = process.env.DATABASE_URI
 
 if (!DATABASE_URI) {
-  throw new Error(
-    'Please define the DATABASE_URI environment variable inside .env.local'
-  )
+  // throw new Error(
+  //   'Please define the DATABASE_URI environment variable inside .env.local'
+  // )
 }
 
 /**

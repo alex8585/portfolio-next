@@ -17,7 +17,7 @@ export const portfolioListReducer = produce((draft, action) => {
     case PORTFOLIO_LIST_SUCCESS:
       draft.loading = false
       draft.data = action.payload.data
-      draft.pages = action.payload.pages
+      //draft.pages = action.payload.pages
       draft.page = action.payload.page
       draft.total = action.payload.total
       draft.perPage = action.payload.perPage

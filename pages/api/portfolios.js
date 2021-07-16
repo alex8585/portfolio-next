@@ -1,9 +1,7 @@
 import mongoose from '../../middleware/mongoose.js';
 import prepareQuery from '../../middleware/prepareQuery.js';
 import Portfolio from '../../models/portfolioModel.js'
-//import Tag from '../../models/tagModel.js'
 import nextConnect from "next-connect";
-import { calcPages } from "../../utils/utils.js"
 
 const handler = nextConnect();
 
@@ -25,7 +23,6 @@ handler.get(async (req, res) => {
         page,
         perPage,
         total,
-        pages: calcPages(perPage, total),
         data,
     })
 })

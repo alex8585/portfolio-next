@@ -4,6 +4,17 @@ import {
   PORTFOLIO_LIST_SUCCESS,
   PORTFOLIO_LIST_FAIL,
 } from "../constants/portfolioConstants"
+export const setPortfolios = (portfolios,perPage,total) => async (dispatch) => {
+      dispatch({
+        type: PORTFOLIO_LIST_SUCCESS,
+        payload: {
+          page: 1,
+          data:portfolios,
+          total,
+          perPage
+        },
+      })
+}
 
 
 export const listPortfolios =
