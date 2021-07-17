@@ -1,7 +1,6 @@
 
 import React from "react"
 
-import CssBaseline from "@material-ui/core/CssBaseline"
 import Grid from "@material-ui/core/Grid"
 
 import Typography from "@material-ui/core/Typography"
@@ -19,9 +18,10 @@ import ListItemText from "@material-ui/core/ListItemText"
 import { listPortfolios } from "../actions/portfolioActions"
 import ButtonBase from "@material-ui/core/ButtonBase"
 import Avatar from "@material-ui/core/Avatar"
-import TopMenu from "../components/TopMenu"
-import Footer from "../components/Footer"
 import Container from "@material-ui/core/Container"
+import FrontendLayout from "../components/FrontendLayout"
+import Head from 'next/head';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -62,9 +62,15 @@ const About = ({ match, location, history }) => {
 
   
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <TopMenu />
+
+    <FrontendLayout>
+     <Head>
+        <title>About me</title>
+        <meta
+          name="description"
+          content="About alex 85 page with contacts"
+        />
+      </Head> 
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
         <Typography
           component="h1"
@@ -80,11 +86,6 @@ const About = ({ match, location, history }) => {
         <Grid container spacing={2}>
           <Grid item>
             <ButtonBase className={classes.image}>
-              {/* <img
-                className={classes.img}
-                alt="complex"
-                src="uploads/profile.jpg"
-              /> */}
               <Avatar
                 className={classes.large}
                 alt="Remy Sharp"
@@ -140,21 +141,12 @@ const About = ({ match, location, history }) => {
                     </ListItem>
                   </List>
                 </div>
-                {/* <Typography variant="body2">
-                  - PHP / Laravel / WordPress
-                </Typography>
-                <Typography variant="body2">
-                  - JS / React.js / Vue.js
-                </Typography>
-                <Typography variant="body2">- MySQL / MogngoDB</Typography>
-                <Typography variant="body2">- Linux / Windows</Typography> */}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Container>
-      <Footer />
-    </React.Fragment>
+    </FrontendLayout>
   )
 }
 

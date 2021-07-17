@@ -6,7 +6,6 @@ import Card from "@material-ui/core/Card"
 
 import CardContent from "@material-ui/core/CardContent"
 import CardHeader from "@material-ui/core/CardHeader"
-import CssBaseline from "@material-ui/core/CssBaseline"
 import Grid from "@material-ui/core/Grid"
 
 import Typography from "@material-ui/core/Typography"
@@ -21,11 +20,8 @@ import { filterByTags, setTags } from "../actions/tagActions"
 import { listPortfolios,setPortfolios } from "../actions/portfolioActions"
 import Pagination from "@material-ui/core/Pagination"
 
-import CardMedia from "@material-ui/core/CardMedia"
 
 import { red } from "@material-ui/core/colors"
-import TopMenu from "../components/TopMenu"
-import Footer from "../components/Footer"
 
 import Chip from "@material-ui/core/Chip"
 import Paper from "@material-ui/core/Paper"
@@ -37,6 +33,8 @@ import Portfolio from '../models/portfolioModel.js'
 
 import { calcPages } from "../utils/utils.js"
 import Image from 'next/image'
+import FrontendLayout from "../components/FrontendLayout"
+import Head from 'next/head';
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -46,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
       listStyle: "none",
     },
   },
-
   link: {
     margin: "5px 0px",
   },
@@ -58,9 +55,6 @@ const useStyles = makeStyles((theme) => ({
     cardHeader: {
       backgroundColor: "#e0e0e0",
       marginBottom: "10px"
-      //theme.palette.type === "light"
-        //theme.palette.grey[200]
-        //: theme.palette.grey[700],
     },
   cardPricing: (props) => ({
     display: "flex",
@@ -72,7 +66,8 @@ const useStyles = makeStyles((theme) => ({
   chip:(props) => ( {
     margin: "0px 5px",
   }),
-  root: {
+  card: {
+    margin: "0 auto",
     maxWidth: 345,
   },
   paper: (props) => ( {
@@ -93,9 +88,6 @@ const useStyles = makeStyles((theme) => ({
   expand: (props) => ( {
     transform: "rotate(0deg)",
     marginLeft: "auto",
-    // transition: theme.transitions.create("transform", {
-    //   duration: theme.transitions.duration.shortest,
-    // }),
   }),
   expandOpen: {
     transform: "rotate(180deg)",
@@ -136,8 +128,6 @@ const Index = ({ match, location, history,staticTags }) => {
   )
   const { data, page, total, loading } = portfolioList
 
-  //staticTags = 
-  //console.log(staticTags)
   let countPages = calcPages(perPage, total) 
   
    //useEffect(() => {
@@ -169,10 +159,14 @@ const Index = ({ match, location, history,staticTags }) => {
 
   if (!data.length ) return "loading..."
   return (
-    <React.Fragment >
-      <CssBaseline />
-      <TopMenu />
-
+    <FrontendLayout>
+      <Head>
+        <title>Portfolio</title>
+        <meta
+          name="description"
+          content="Welcome to alex85 portfolio page"
+        />
+      </Head> 
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
         <Typography
           component="h1"
@@ -210,7 +204,7 @@ const Index = ({ match, location, history,staticTags }) => {
           {data.map((portfolio) => (
             // Enterprise card is full width at sm breakpoint
             <Grid item key={portfolio.name} xs={12} sm={6} md={4}>
-              <Card className={classes.root}>
+              <Card className={classes.card}>
                 <CardHeader title={portfolio.name} subheader="" className={classes.cardHeader}/>
                 <Image
         src={ "/" + portfolio.img}
@@ -218,11 +212,6 @@ const Index = ({ match, location, history,staticTags }) => {
         width={400}
         height={300}
       />
-               {/* <CardMedia
-                  className={classes.media}
-                  image={portfolio.img}
-                  title={portfolio.name}
-                />  */}
                 <CardContent>
                   <Typography
                     variant="body2"
@@ -231,7 +220,7 @@ const Index = ({ match, location, history,staticTags }) => {
                   >
                     {portfolio.description ? portfolio.description : ""}
                   </Typography>
-                 <Paper component="ul" className={classes.paper}>
+                  <Paper component="ul" className={classes.paper}>
                     {[...portfolio.tags]
                      // .sort((a, b) =>
                       //  a.order_number > b.order_number ? 1 : -1
@@ -281,8 +270,8 @@ const Index = ({ match, location, history,staticTags }) => {
         </div>
       </Container>
 
-      <Footer />
-    </React.Fragment>
+</FrontendLayout>
+
   )
 }
 
@@ -300,7 +289,7 @@ export const getStaticProps =  wrapper.getStaticProps( (store) =>
       await store.dispatch(setPortfolios(portfolios, perPage, total))
       
       return null 
-     
+      
       
     }
 );
