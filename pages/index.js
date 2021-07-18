@@ -36,6 +36,7 @@ import Image from 'next/image'
 import FrontendLayout from "../components/FrontendLayout"
 import Head from 'next/head';
 
+
 const useStyles = makeStyles((theme) => ({
   "@global": {
     ul: {
@@ -122,17 +123,16 @@ const Index = ({ match, location, history,staticTags }) => {
 
   const dispatch = useDispatch()
 
-  const portfolioList = useSelector((state) => state.portfolioList)
-  const { data: tags, loading: tagsloading } = useSelector(
-    (state) => state.tagList
-  )
-  const { data, page, total, loading } = portfolioList
+  const { data, page, total, loading } = useSelector((state) => state.portfolioList)
+  const { data: tags, loading: tagsloading } = useSelector((state) => state.tagList)
 
   let countPages = calcPages(perPage, total) 
   
-   //useEffect(() => {
+
+  //  useEffect(async () => {
      //dispatch(listTags(1))
-   //}, [dispatch])
+
+  //  }, [dispatch])
 
   // useEffect(() => {
   //   if(!tags.length) return    

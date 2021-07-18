@@ -32,6 +32,7 @@ async function dbConnect() {
       bufferMaxEntries: 0,
       useFindAndModify: false,
       useCreateIndex: true,
+      serverSelectionTimeoutMS: 5000,
     }
 
     cached.promise = mongoose.connect(DATABASE_URI, opts).then((mongoose) => {

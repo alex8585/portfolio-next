@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/styles"
 //import { makeStyles } from "@material-ui/core/styles"
 import Link from 'next/link'
 
+import { useRouter } from 'next/router'
 const useStyles = makeStyles((theme) => ({
   appBar: {
     //borderBottom: `1px solid ${theme.palette.divider}`,
@@ -33,6 +34,8 @@ const useStyles = makeStyles((theme) => ({
 
 const TopMenu = () => {
   const classes = useStyles()
+  const { asPath } = useRouter()
+
   return (
     <AppBar
       position="static"
@@ -50,29 +53,25 @@ const TopMenu = () => {
           Alex85 programmer
         </Typography>
         <nav className={classes.link}  >
-           
-          <Link
-            href="/"
             
-          >
-            Portfolio
+          <Link  href="/" >
+            <a className={ asPath == '/' && 'active'}>Portfolio</a>
           </Link>
           <Link
             href="/about"
           >
-            About me
+            <a className={ asPath == '/about' && 'active'}>About me</a>
+            
           </Link>
         </nav>
-        {/* <Button
-          href="#"
-          color="primary"
-          variant="outlined"
-          className={classes.link}
-        >
-          Login
-        </Button> */}
       </Toolbar>
+        <style jsx>{`
+          .active {
+            text-decoration: underline;
+          }
+        `}</style>
     </AppBar>
+    
   )
 }
 

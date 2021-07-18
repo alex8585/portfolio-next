@@ -1,5 +1,5 @@
 {
-  "name": "with-redux-thunk",
+  "name": "portfolio",
   "version": "1.0.0",
   "scripts": {
     "dev": "next",
@@ -7,15 +7,21 @@
     "start": "next start"
   },
   "dependencies": {
+    "@apollo/client": "^3.0.2",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@material-ui/core": "^5.0.0-beta.0",
     "@material-ui/lab": "^5.0.0-alpha.39",
     "@material-ui/styled-engine-sc": "^5.0.0-beta.0",
     "@material-ui/styles": "^4.11.4",
+    "@next/bundle-analyzer": "^11.0.1",
+    "apollo-server-micro": "^2.14.2",
     "axios": "^0.21.1",
     "compose-middleware": "^5.0.1",
+    "graphql-tools": "^7.0.5",
     "immer": "^9.0.3",
+    "micro": "^9.3.4",
+    "microrouter": "^3.1.3",
     "mongoose": "^5.13.2",
     "next": "latest",
     "next-connect": "^0.10.1",
