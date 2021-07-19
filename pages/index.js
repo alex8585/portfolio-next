@@ -1,5 +1,5 @@
 
-import  React,{useEffect} from "react"
+import  React,{useEffect,useState} from "react"
 
 import Button from "@material-ui/core/Button"
 import Card from "@material-ui/core/Card"
@@ -35,6 +35,8 @@ import { calcPages } from "../utils/utils.js"
 import Image from 'next/image'
 import FrontendLayout from "../components/FrontendLayout"
 import Head from 'next/head';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css'; 
 
 
 const useStyles = makeStyles((theme) => ({
@@ -96,6 +98,9 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: red[500],
   },
+  image: {
+    cursor: "pointer"
+  },
   button: {
     marginTop: "15px",
     width: "100%",
@@ -127,8 +132,8 @@ const Index = ({ match, location, history,staticTags }) => {
   const { data: tags, loading: tagsloading } = useSelector((state) => state.tagList)
 
   let countPages = calcPages(perPage, total) 
-  
-
+   
+  const images = [];
   //  useEffect(async () => {
      //dispatch(listTags(1))
 
@@ -139,8 +144,12 @@ const Index = ({ match, location, history,staticTags }) => {
   //   dispatch(listPortfolios(1, 6, tags))
   // }, [dispatch, tags])
 
-  let handleChangePage = (event, value) => {
-    dispatch(listPortfolios(value, perPage, tags))
+  const [isOpen, setIsOpen] = useState(false);
+  const [photoIndex, setPhotoIndex] = useState(0);
+
+  let setCurrentImage = (index) => {
+    setPhotoIndex(index)
+    setIsOpen(true)
   }
 
   let handletagFilter = async (id) => {
@@ -157,6 +166,10 @@ const Index = ({ match, location, history,staticTags }) => {
     dispatch(listPortfolios(1, perPage, newTags))
   }
 
+  let handleChangePage = (event, value) => {
+    dispatch(listPortfolios(value, perPage, tags))
+  }
+
   if (!data.length ) return "loading..."
   return (
     <FrontendLayout>
@@ -167,7 +180,10 @@ const Index = ({ match, location, history,staticTags }) => {
           content="Welcome to alex85 portfolio page"
         />
       </Head> 
+    
+        
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
+        
         <Typography
           component="h1"
           variant="h4"
@@ -201,17 +217,19 @@ const Index = ({ match, location, history,staticTags }) => {
             })}
         </ul>
         <Grid container spacing={5} alignItems="flex-end">
-          {data.map((portfolio) => (
+          {data.map((portfolio, i) => (
             // Enterprise card is full width at sm breakpoint
             <Grid item key={portfolio.name} xs={12} sm={6} md={4}>
               <Card className={classes.card}>
                 <CardHeader title={portfolio.name} subheader="" className={classes.cardHeader}/>
-                <Image
-        src={ "/" + portfolio.img}
-        alt={portfolio.name}
-        width={400}
-        height={300}
-      />
+                  {images.push("/" + portfolio.img)  && ""}
+                <Image className={classes.image}
+                  onClick={() => setCurrentImage(i)}
+                  src={ "/" + portfolio.img}
+                  alt={portfolio.name}
+                  width={400}
+                  height={300}
+                />
                 <CardContent>
                   <Typography
                     variant="body2"
@@ -269,8 +287,23 @@ const Index = ({ match, location, history,staticTags }) => {
           />
         </div>
       </Container>
-
-</FrontendLayout>
+        { isOpen && <Lightbox
+            mainSrc={images[photoIndex]}
+            nextSrc={images[(photoIndex + 1) % images.length]}
+            prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+            onCloseRequest={() => setIsOpen(false)}
+            onMovePrevRequest={() =>
+              setPhotoIndex(
+                (photoIndex + images.length - 1) % images.length,
+              )
+            }
+            onMoveNextRequest={() =>
+              setPhotoIndex(
+                (photoIndex + 1) % images.length,
+              )
+            }
+        /> } 
+    </FrontendLayout>
 
   )
 }

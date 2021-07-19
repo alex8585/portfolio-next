@@ -3,7 +3,7 @@ import Footer from "../components/Footer"
 
 import CssBaseline from "@material-ui/core/CssBaseline"
 import Head from 'next/head';
-
+import Divider from '@material-ui/core/Divider';
 import React from "react"
 export default function FrontendLayout({ children }) {
     return (
@@ -11,8 +11,8 @@ export default function FrontendLayout({ children }) {
             <Head>
                 <link rel="favicon icon" href="favicon.ico" />
             </Head>
-            <CssBaseline />
             <TopMenu />
+            <Divider />
                 {children}
             <Footer />
         </React.Fragment>
