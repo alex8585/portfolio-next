@@ -9,7 +9,7 @@ export default function FrontendLayout({ children }) {
     return (
         <React.Fragment >
             <Head>
-                <link rel="favicon icon" href="favicon.ico" />
+                {/* <link rel="favicon icon" href="favicon.ico" /> */}
             </Head>
             <TopMenu />
             <Divider />
