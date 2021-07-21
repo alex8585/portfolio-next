@@ -8,6 +8,7 @@ import {
 import { getList } from "../providers/portfoliosProvider.js"
 
 export const setPortfolios = (portfolios,perPage,total) => async (dispatch) => {
+  
     dispatch({
       type: PORTFOLIO_LIST_SUCCESS,
       payload: {
@@ -18,6 +19,29 @@ export const setPortfolios = (portfolios,perPage,total) => async (dispatch) => {
       },
     })
 }
+
+export const getPortfolios =
+  (page = "", perPage = "", direction="", order="", filter = {}) => async (dispatch) => {
+    try {
+      dispatch({ type: PORTFOLIO_LIST_REQUEST })
+      let data = await getList(perPage,page,direction, order,filter)
+      dispatch({
+        type: PORTFOLIO_LIST_SUCCESS,
+        payload: data,
+      })
+      
+    } catch (error) {
+      dispatch({
+        type: PORTFOLIO_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
+  }
+
+
 
 export const listPortfolios =
   (page = "", perPage = "", tags = []) =>

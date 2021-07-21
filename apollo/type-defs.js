@@ -1,11 +1,12 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client"
 
 export const typeDefs = gql`
   type Tag {
     id: ID!
     name: String
-    createdAt:String
-    updatedAt:String
+    createdAt: String
+    updatedAt: String
+    createdTs: Float
   }
 
   type Portfolio {
@@ -13,20 +14,35 @@ export const typeDefs = gql`
     name: String
     img: String
     url: String
+    updatedAt: String
+    createdTs: Float
     tags: [Tag]
   }
-  
 
-  input filterType  {
-    tags: String,
-   
-  
-}
+  input filterType {
+    tags: String
+  }
 
   type Query {
-    getPortfolios(perPage:Int = 6, page:Int = 1, filter: filterType ={} ): [Portfolio]
+    getPortfolios(
+      perPage: Int = 6
+      page: Int = 1
+      direction: String = ""
+      order: String = ""
+      filter: filterType = {}
+    ): [Portfolio]
     totalPortfolios(filter: filterType = {}): Int
-    getTags: [Tag!]
-    totalTags: Int
+    getTags(
+      perPage: Int = 6
+      page: Int = 1
+      direction: String = ""
+      order: String = ""
+      filter: filterType = {}
+    ): [Tag]
+    totalTags(filter: filterType = {}): Int
+  }
+
+  type Mutation {
+    createTag(name: String): ID!
   }
 `

@@ -1,5 +1,4 @@
-
-import  React,{useEffect,useState} from "react"
+import React, { useEffect, useState } from "react"
 
 import Button from "@material-ui/core/Button"
 import Card from "@material-ui/core/Card"
@@ -17,27 +16,25 @@ import { useDispatch, useSelector } from "react-redux"
 
 import { filterByTags, setTags } from "../actions/tagActions"
 
-import { listPortfolios,setPortfolios } from "../actions/portfolioActions"
+import { listPortfolios, setPortfolios } from "../actions/portfolioActions"
 import Pagination from "@material-ui/core/Pagination"
-
 
 import { red } from "@material-ui/core/colors"
 
 import Chip from "@material-ui/core/Chip"
 import Paper from "@material-ui/core/Paper"
-import { wrapper } from '../store'
-import dbConnect from '../utils/dbConnect';
-import Tag from '../models/tagModel.js'
+import { wrapper } from "../store"
+import dbConnect from "../utils/dbConnect"
+import Tag from "../models/tagModel.js"
 
-import Portfolio from '../models/portfolioModel.js'
+import Portfolio from "../models/portfolioModel.js"
 
 import { calcPages } from "../utils/utils.js"
-import Image from 'next/image'
+import Image from "next/image"
 import FrontendLayout from "../components/FrontendLayout"
-import Head from 'next/head';
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css'; 
-
+import Head from "next/head"
+import Lightbox from "react-image-lightbox"
+import "react-image-lightbox/style.css"
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -52,13 +49,13 @@ const useStyles = makeStyles((theme) => ({
   },
   heroContent: {
     padding: "20px 0px 5px",
-    maxWidth:"960px",
-    "& li div": {backgroundColor: "#e0e0e0"}
+    maxWidth: "960px",
+    "& li div": { backgroundColor: "#e0e0e0" },
   },
-    cardHeader: {
-      backgroundColor: "#e0e0e0",
-      marginBottom: "10px"
-    },
+  cardHeader: {
+    backgroundColor: "#e0e0e0",
+    marginBottom: "10px",
+  },
   cardPricing: (props) => ({
     display: "flex",
     justifyContent: "center",
@@ -66,14 +63,14 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "15px",
   }),
 
-  chip:(props) => ( {
+  chip: (props) => ({
     margin: "0px 5px",
   }),
   card: {
     margin: "0 auto",
     maxWidth: 345,
   },
-  paper: (props) => ( {
+  paper: (props) => ({
     display: "flex",
     justifyContent: "center",
     flexWrap: "wrap",
@@ -88,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
     height: 0,
     paddingTop: "56.25%", // 16:9
   },
-  expand: (props) => ( {
+  expand: (props) => ({
     transform: "rotate(0deg)",
     marginLeft: "auto",
   }),
@@ -99,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
   image: {
-    cursor: "pointer"
+    cursor: "pointer",
   },
   button: {
     marginTop: "15px",
@@ -121,31 +118,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const perPage = 6;
+const perPage = 6
 
-const Index = ({ match, location, history,staticTags }) => {
+const Index = ({ match, location, history, staticTags }) => {
   const classes = useStyles()
 
   const dispatch = useDispatch()
 
-  const { data, page, total, loading } = useSelector((state) => state.portfolioList)
-  const { data: tags, loading: tagsloading } = useSelector((state) => state.tagList)
+  const { data, page, total, loading } = useSelector(
+    (state) => state.portfolioList
+  )
+  const { data: tags, loading: tagsloading } = useSelector(
+    (state) => state.tagList
+  )
 
-  let countPages = calcPages(perPage, total) 
-   
-  const images = [];
+  let countPages = calcPages(perPage, total)
+
+  const images = []
   //  useEffect(async () => {
-     //dispatch(listTags(1))
+  //dispatch(listTags(1))
 
   //  }, [dispatch])
 
   // useEffect(() => {
-  //   if(!tags.length) return    
+  //   if(!tags.length) return
   //   dispatch(listPortfolios(1, 6, tags))
   // }, [dispatch, tags])
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
+  const [isOpen, setIsOpen] = useState(false)
+  const [photoIndex, setPhotoIndex] = useState(0)
 
   let setCurrentImage = (index) => {
     setPhotoIndex(index)
@@ -157,7 +158,7 @@ const Index = ({ match, location, history,staticTags }) => {
       if (tag.id === id) {
         return {
           ...tag,
-          active: !tag.active
+          active: !tag.active,
         }
       }
       return tag
@@ -170,20 +171,15 @@ const Index = ({ match, location, history,staticTags }) => {
     dispatch(listPortfolios(value, perPage, tags))
   }
 
-  if (!data.length ) return "loading..."
+  if (!data.length) return "loading..."
   return (
     <FrontendLayout>
       <Head>
         <title>Portfolio</title>
-        <meta
-          name="description"
-          content="Welcome to alex85 portfolio page"
-        />
-      </Head> 
-    
-        
+        <meta name="description" content="Welcome to alex85 portfolio page" />
+      </Head>
+
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
-        
         <Typography
           component="h1"
           variant="h4"
@@ -200,7 +196,7 @@ const Index = ({ match, location, history,staticTags }) => {
           component="p"
         ></Typography>
       </Container>
-      <Container  maxWidth="md" component="main" className={classes.heroContent}>
+      <Container maxWidth="md" component="main" className={classes.heroContent}>
         <ul className={classes.paper}>
           {[...tags]
             //.sort((a, b) => (a.order_number > b.order_number ? 1 : -1))
@@ -221,11 +217,16 @@ const Index = ({ match, location, history,staticTags }) => {
             // Enterprise card is full width at sm breakpoint
             <Grid item key={portfolio.name} xs={12} sm={6} md={4}>
               <Card className={classes.card}>
-                <CardHeader title={portfolio.name} subheader="" className={classes.cardHeader}/>
-                  {images.push("/" + portfolio.img)  && ""}
-                <Image className={classes.image}
+                <CardHeader
+                  title={portfolio.name}
+                  subheader=""
+                  className={classes.cardHeader}
+                />
+                {images.push("/" + portfolio.img) && ""}
+                <Image
+                  className={classes.image}
                   onClick={() => setCurrentImage(i)}
-                  src={ "/" + portfolio.img}
+                  src={"/" + portfolio.img}
                   alt={portfolio.name}
                   width={400}
                   height={300}
@@ -240,7 +241,7 @@ const Index = ({ match, location, history,staticTags }) => {
                   </Typography>
                   <Paper component="ul" className={classes.paper}>
                     {[...portfolio.tags]
-                     // .sort((a, b) =>
+                      // .sort((a, b) =>
                       //  a.order_number > b.order_number ? 1 : -1
                       //)
                       .map((tag) => {
@@ -287,44 +288,43 @@ const Index = ({ match, location, history,staticTags }) => {
           />
         </div>
       </Container>
-        { isOpen && <Lightbox
-            mainSrc={images[photoIndex]}
-            nextSrc={images[(photoIndex + 1) % images.length]}
-            prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-            onCloseRequest={() => setIsOpen(false)}
-            onMovePrevRequest={() =>
-              setPhotoIndex(
-                (photoIndex + images.length - 1) % images.length,
-              )
-            }
-            onMoveNextRequest={() =>
-              setPhotoIndex(
-                (photoIndex + 1) % images.length,
-              )
-            }
-        /> } 
+      {isOpen && (
+        <Lightbox
+          mainSrc={images[photoIndex]}
+          nextSrc={images[(photoIndex + 1) % images.length]}
+          prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+          onCloseRequest={() => setIsOpen(false)}
+          onMovePrevRequest={() =>
+            setPhotoIndex((photoIndex + images.length - 1) % images.length)
+          }
+          onMoveNextRequest={() =>
+            setPhotoIndex((photoIndex + 1) % images.length)
+          }
+        />
+      )}
     </FrontendLayout>
-
   )
 }
 
-export const getStaticProps =  wrapper.getStaticProps( (store) => 
-    async ({preview}) => {
+export const getStaticProps = wrapper.getStaticProps(
+  (store) =>
+    async ({ preview }) => {
       await dbConnect()
-      let tags = await Tag.find().limit(perPage)
+      let tags = await Tag.find().limit()
       const total = await Portfolio.countDocuments()
-      let portfolios = await Portfolio.find().limit(perPage).sort({ order_number: 1 }).populate("tags")
+      let portfolios = await Portfolio.find()
+        .limit(perPage)
+        .sort({ order_number: 1 })
+        .populate("tags")
 
       portfolios = JSON.parse(JSON.stringify(portfolios))
       tags = JSON.parse(JSON.stringify(tags))
 
       await store.dispatch(setTags(tags))
       await store.dispatch(setPortfolios(portfolios, perPage, total))
-      
-      return null 
-      
-      
+
+      return null
     }
-);
+)
 
 export default Index

@@ -29,9 +29,14 @@ const portfolioSchema = mongoose.Schema(
   }
 )
 
+portfolioSchema.virtual('createdTs').get(function() {
+  return this.createdAt.getTime();
+})
+
 portfolioSchema.virtual("id").get(function () {
   return this._id.toHexString()
 })
+
 portfolioSchema.virtual("fullImg").get(function () {
   if (!this.img) {
     return
@@ -40,6 +45,8 @@ portfolioSchema.virtual("fullImg").get(function () {
   const HOST = process.env.HOST || "http://localhost"
   return `${HOST}:${PORT}/${this.img}`
 })
+
+
 const Portfolio = mongoose.models.Portfolio || mongoose.model("Portfolio", portfolioSchema)
 
 export default Portfolio
