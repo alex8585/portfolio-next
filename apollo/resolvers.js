@@ -19,8 +19,6 @@ export const resolvers = {
       const { perPage, filter, page, direction, order } = args
       const skip = perPage * (page - 1)
 
-      console.log(order, direction)
-
       let sortObj = {}
       if (order && direction) {
         let newOrder = order
@@ -51,8 +49,6 @@ export const resolvers = {
     async getPortfolios(parent, args, context, info) {
       const { perPage, filter, page, direction, order } = args
       const skip = perPage * (page - 1)
-
-      console.log(order, direction)
 
       let sortObj = {}
       if (order && direction) {

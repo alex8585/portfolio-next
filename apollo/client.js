@@ -1,6 +1,7 @@
 import { useMemo } from "react"
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client"
 import { setContext } from "@apollo/client/link/context"
+import { getUserTokenFromLocalStorage } from "../utils/utils"
 let apolloClient
 
 const httpLink = createHttpLink({
@@ -8,7 +9,7 @@ const httpLink = createHttpLink({
 })
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("token")
+  let token = getUserTokenFromLocalStorage()
   return {
     headers: {
       ...headers,

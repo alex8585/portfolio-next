@@ -1,5 +1,5 @@
 import AdminLayout from "../../../components/Admin/AdminLayout"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import Box from "@material-ui/core/Box"
 import Table from "@material-ui/core/Table"
@@ -19,9 +19,10 @@ import Tag from "../../../models/tagModel.js"
 import { getTags, setTags, createNewTag } from "../../../actions/tagActions"
 import { useDispatch, useSelector } from "react-redux"
 import { makeStyles } from "@material-ui/styles"
-
 import moment from "moment"
 import CreateTagModat from "../../../components/Admin/CreateTagModat.js"
+import { useRouter } from "next/router"
+import { setUser } from "../../../actions/userActions"
 const useStyles = makeStyles((theme) => ({
   btn: {
     margin: "7px 0px",
@@ -100,10 +101,21 @@ const Tags = () => {
   const [rowsPerPage, setRowsPerPage] = useState(initPerPage)
 
   const classes = useStyles()
-
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const { user, loaded: userLoaded } = useSelector((state) => state.user)
   // Avoid a layout jump when reaching the last page with empty tags.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - total) : 0
 
+  useEffect(async () => {
+    dispatch(setUser())
+  }, [dispatch])
+
+  if (userLoaded && (!user || !user.isAdmin)) {
+    router.push("/login")
+  }
+
+  
   const handleRequestSort = (event, field) => {
     const isAsc = orderBy === field && order === "asc"
     const newOrder = isAsc ? "desc" : "asc"
@@ -111,34 +123,32 @@ const Tags = () => {
     setOrderBy(field)
     dispatch(getTags(page + 1, rowsPerPage, newOrder, field))
   }
-
+  
   const { data: tags, total } = useSelector((state) => state.tagList)
-
-  const dispatch = useDispatch()
-
+  
   const handleChangePage = (event, newPage) => {
     dispatch(getTags(newPage + 1, rowsPerPage, order, orderBy))
     setPage(newPage)
   }
-
+  
   const handleChangeRowsPerPage = (event) => {
     let perPage = parseInt(event.target.value, 10)
     dispatch(getTags(1, perPage, order, orderBy))
     setRowsPerPage(perPage)
     setPage(0)
   }
-
+  
   const dateFormat = (timestamp) => {
     timestamp = parseInt(timestamp)
     return moment(timestamp).format("DD-MM-YYYY:HH:MM")
   }
-
+  
   const [openCreateModal, setOpenCreateModal] = useState(false)
-
+  
   const openCreateModalHandler = () => {
     setOpenCreateModal(true)
   }
-
+  
   const closeCreateModalHandler = () => {
     setOpenCreateModal(false)
   }
@@ -150,7 +160,10 @@ const Tags = () => {
     await dispatch(getTags(page + 1, rowsPerPage, order, orderBy))
     setOpenCreateModal(false)
   }
-
+  
+  if (!userLoaded || !user) {
+    return null
+  }
   return (
     <AdminLayout>
       <Box sx={{ width: "100%" }}>

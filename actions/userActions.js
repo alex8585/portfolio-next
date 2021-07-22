@@ -1,5 +1,6 @@
 import { login } from "../providers/userProvider"
 
+import { getUserFromLocalStorage } from "../utils/utils"
 import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -15,8 +16,8 @@ export const loginAttempt = (values) => async (dispatch) => {
     let { data } = await login(email, password)
 
     if (!data.login.error) {
-      let token = data.login.token
-      localStorage.setItem("token", token)
+      let user = data.login
+      localStorage.setItem("user", JSON.stringify(user))
 
       dispatch({
         type: USER_LOGIN_SUCCESS,
@@ -44,4 +45,12 @@ export const loginAttempt = (values) => async (dispatch) => {
       payload: msg,
     })
   }
+}
+
+export const setUser = () => async (dispatch) => {
+  let user = getUserFromLocalStorage()
+  dispatch({
+    type: USER_LOGIN_SUCCESS,
+    payload: user,
+  })
 }

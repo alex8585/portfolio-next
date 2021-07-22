@@ -9,3 +9,20 @@ export const generateToken = (id) => {
 export const calcPages = (pageSize, totalCount) => {
   return totalCount < pageSize ? 1 : Math.ceil(totalCount / pageSize)
 }
+
+export const getUserFromLocalStorage = () => {
+  const user = localStorage.getItem("user")
+  if (!user) {
+    return null
+  }
+
+  return JSON.parse(user)
+}
+
+export const getUserTokenFromLocalStorage = () => {
+  let user = getUserFromLocalStorage()
+  if (!user || !user.token) {
+    return null
+  }
+  return user.token
+}

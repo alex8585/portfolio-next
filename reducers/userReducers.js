@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   loading: false,
   user: {},
   error: null,
+  loaded: false,
 }
 export const userReducer = produce((draft, action) => {
   switch (action.type) {
@@ -18,6 +19,7 @@ export const userReducer = produce((draft, action) => {
       break
     case USER_LOGIN_SUCCESS:
       draft.loading = false
+      draft.loaded = true
       draft.error = null
       draft.user = action.payload
       break

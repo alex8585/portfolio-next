@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/styles"
@@ -12,6 +12,9 @@ import Button from "@material-ui/core/Button"
 import { useDispatch, useSelector } from "react-redux"
 import Alert from "@material-ui/core/Alert"
 import { loginAttempt } from "../actions/userActions"
+import { setUser } from "../actions/userActions"
+
+import { useRouter } from "next/router"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -58,17 +61,23 @@ const useStyles = makeStyles((theme) => ({
 }))
 const About = ({ match, location, history }) => {
   const classes = useStyles()
-
+  const dispatch = useDispatch()
+  const router = useRouter()
   const [values, setValues] = useState({
     email: "",
     password: "",
   })
 
-  const { data, error } = useSelector((state) => state.user)
+  const { user, loaded: userLoaded, error } = useSelector((state) => state.user)
 
-  console.log(data, error)
+  useEffect(async () => {
+    dispatch(setUser())
+  }, [dispatch])
 
-  const dispatch = useDispatch()
+  if (userLoaded && user) {
+    router.push("/admin")
+  }
+
   function handleChange(e) {
     const key = e.target.name
     const value = e.target.value
