@@ -8,6 +8,7 @@ import {
 
 const INITIAL_STATE = {
   data: [],
+  loading: false,
 }
 export const tagListReducer = produce((draft, action) => {
   switch (action.type) {
@@ -15,7 +16,7 @@ export const tagListReducer = produce((draft, action) => {
       draft.data = action.payload
       break
     case TAG_LIST_REQUEST:
-      draft.loding = true
+      draft.loading = true
       draft.data = []
       break
     case TAG_LIST_SUCCESS:
@@ -24,7 +25,7 @@ export const tagListReducer = produce((draft, action) => {
       draft.page = action.payload.page || null
       draft.total = action.payload.total || null
       draft.perPage = action.payload.perPage || null
-      
+
       break
     case TAG_LIST_FAIL:
       draft.loading = false

@@ -19,6 +19,15 @@ export const typeDefs = gql`
     tags: [Tag]
   }
 
+  type User {
+    id: ID
+    username: String
+    email: String
+    isAdmin: Boolean
+    token: ID
+    error: String
+  }
+
   input filterType {
     tags: String
   }
@@ -40,6 +49,7 @@ export const typeDefs = gql`
       filter: filterType = {}
     ): [Tag]
     totalTags(filter: filterType = {}): Int
+    login(email: String, password: String): User
   }
 
   type Mutation {

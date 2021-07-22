@@ -1,6 +1,8 @@
 import Portfolio from "../models/portfolioModel.js"
 import Tag from "../models/tagModel.js"
-
+import User from "../models/userModel.js"
+import { generateToken } from "../utils/utils.js"
+import { ApolloError } from "apollo-server-errors"
 function getFilterObj(filter) {
   let filterObj = {}
 
@@ -79,6 +81,28 @@ export const resolvers = {
 
       const total = await Portfolio.countDocuments(filterObj)
       return total
+    },
+
+    async login(parent, args, context, info) {
+      const { email, password } = args
+      const user = await User.findOne({ email })
+      //console.log(user)
+      if (user && (await user.matchPassword(password))) {
+        const token = generateToken(user.id)
+        const { id, username, email, isAdmin } = user
+        return {
+          id,
+          username,
+          email,
+          isAdmin,
+          token,
+          error: null,
+        }
+      } else {
+        return {
+          error: "Invalid email or password",
+        }
+      }
     },
   },
 
