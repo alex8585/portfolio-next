@@ -5,9 +5,9 @@ import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import React from "react"
-import useFormValues from "../../hooks/useFormValues"
+import useFormValues from "../../../hooks/useFormValues"
 
-export default function CreateTagModat({ open, handleClose, handleSubmit }) {
+export default function CreateModat({ open, handleClose, handleSubmit }) {
   const [values, handleChange] = useFormValues({ name: "" })
 
   return (

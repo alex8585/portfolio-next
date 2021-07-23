@@ -12,11 +12,12 @@ export default function DeleteConfirmModal({
   handleClose,
   handleConfirm,
   currentRow,
+  title,
 }) {
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Delete</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Are you sure you want to delete "

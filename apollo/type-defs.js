@@ -28,13 +28,18 @@ export const typeDefs = gql`
     error: String
   }
 
-  type DeleteResponce {
+  type ActionResponce {
     error: String
     success: Boolean
   }
 
   input filterType {
     tags: String
+  }
+
+  input tagInput {
+    id: ID!
+    name: String
   }
 
   type Query {
@@ -59,6 +64,14 @@ export const typeDefs = gql`
 
   type Mutation {
     createTag(name: String): ID!
-    deleteTag(id: ID!): DeleteResponce
+    deleteTag(id: ID!): ActionResponce
+    editTag(id: ID!, name: String): ActionResponce
+    createPortfolio(
+      img: String
+      name: String
+      url: String
+      tags: [tagInput]
+      order_number: String
+    ): ActionResponce
   }
 `

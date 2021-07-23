@@ -21,15 +21,22 @@ import {
   setTags,
   createNewTag,
   deleteTag,
+  editTag,
 } from "../../../actions/tagActions"
 import { useDispatch, useSelector } from "react-redux"
 import { makeStyles } from "@material-ui/styles"
 import moment from "moment"
-import CreateTagModat from "../../../components/Admin/CreateTagModat.js"
+import CreateModat from "../../../components/Admin/tags/CreateModat.js"
 import DeleteConfirmModal from "../../../components/Admin/DeleteConfirmModal"
+import EditModal from "../../../components/Admin/tags/EditModal"
 const useStyles = makeStyles((theme) => ({
   topBtnsWrapp: {
     margin: "15px 0",
+  },
+  actionButton: {
+    "& .MuiButton-root.MuiButton-contained.MuiButton-containedPrimary": {
+      margin: "0px 5px",
+    },
   },
 }))
 
@@ -146,6 +153,8 @@ const Tags = () => {
 
   const [openCreateModal, setOpenCreateModal] = useState(false)
   const [openDeleteConfirmModal, setOpenDeleteConfirmModal] = useState(false)
+  const [openEditModal, setOpenEditModal] = useState(false)
+
   const [currentRow, setCurrentRow] = useState({})
 
   const openCreateModalHandler = () => {
@@ -164,7 +173,7 @@ const Tags = () => {
     setOpenCreateModal(false)
   }
 
-  const handleOpenDeleteConfirmModel = (row) => {
+  const handleOpenDeleteConfirmModal = (row) => {
     setCurrentRow(row)
     setOpenDeleteConfirmModal(true)
   }
@@ -179,18 +188,43 @@ const Tags = () => {
     setOpenDeleteConfirmModal(false)
   }
 
+  const handleOpenEditModal = (row) => {
+    setCurrentRow(row)
+    setOpenEditModal(true)
+  }
+
+  const closeEditModalHandler = () => {
+    setOpenEditModal(false)
+  }
+
+  const handleEditSubmit = async () => {
+    //console.log(currentRow)
+    dispatch(editTag(currentRow))
+    await dispatch(getTags(page + 1, rowsPerPage, order, orderBy))
+    setOpenEditModal(false)
+  }
+
   return (
     <AdminLayout>
-      <CreateTagModat
+      <CreateModat
         handleSubmit={createSubminHanler}
         open={openCreateModal}
         handleClose={closeCreateModalHandler}
       />
       <DeleteConfirmModal
+        mtitle="Delete tag confirmation"
         currentRow={currentRow}
         handleConfirm={handleDeleteConfirm}
         open={openDeleteConfirmModal}
         handleClose={closeDeleteConfirmModalHandler}
+      />
+
+      <EditModal
+        setCurrentRow={setCurrentRow}
+        currentRow={currentRow}
+        handleSubmit={handleEditSubmit}
+        open={openEditModal}
+        handleClose={closeEditModalHandler}
       />
 
       <Box sx={{ width: "100%" }}>
@@ -227,11 +261,17 @@ const Tags = () => {
                       <TableCell align="left">
                         {dateFormat(row.createdTs)}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className={classes.actionButton}>
+                        <Button
+                          variant="contained"
+                          onClick={() => handleOpenEditModal(row)}
+                        >
+                          Edit
+                        </Button>
                         <Button
                           variant="contained"
                           color="error"
-                          onClick={() => handleOpenDeleteConfirmModel(row)}
+                          onClick={() => handleOpenDeleteConfirmModal(row)}
                         >
                           Delete
                         </Button>

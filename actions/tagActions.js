@@ -1,4 +1,9 @@
-import { getList, createTag, deleteTagRequest } from "../providers/tagsProvider.js"
+import {
+  getList,
+  createTag,
+  deleteTagRequest,
+  editTagRequest,
+} from "../providers/tagsProvider.js"
 
 import {
   TAG_LIST_SUCCESS,
@@ -64,6 +69,25 @@ export const createNewTag = (values) => async (dispatch) => {
 export const deleteTag = (id) => async (dispatch) => {
   try {
     let res = await deleteTagRequest(id)
+    return res
+  } catch (error) {
+    dispatch({
+      type: TAG_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const editTag = (tag) => async (dispatch) => {
+  try {
+    let newTag = {
+      id: tag.id,
+      name: tag.name,
+    }
+    let res = await editTagRequest(newTag)
     return res
   } catch (error) {
     dispatch({

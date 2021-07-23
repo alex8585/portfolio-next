@@ -4,32 +4,31 @@ import {
   PORTFOLIO_LIST_FAIL,
 } from "../constants/portfolioConstants"
 
+import { getList, createPortfolio } from "../providers/portfoliosProvider.js"
 
-import { getList } from "../providers/portfoliosProvider.js"
-
-export const setPortfolios = (portfolios,perPage,total) => async (dispatch) => {
-  
+export const setPortfolios =
+  (portfolios, perPage, total) => async (dispatch) => {
     dispatch({
       type: PORTFOLIO_LIST_SUCCESS,
       payload: {
         page: 1,
-        data:portfolios,
+        data: portfolios,
         total,
-        perPage
+        perPage,
       },
     })
-}
+  }
 
 export const getPortfolios =
-  (page = "", perPage = "", direction="", order="", filter = {}) => async (dispatch) => {
+  (page = "", perPage = "", direction = "", order = "", filter = {}) =>
+  async (dispatch) => {
     try {
       dispatch({ type: PORTFOLIO_LIST_REQUEST })
-      let data = await getList(perPage,page,direction, order,filter)
+      let data = await getList(perPage, page, direction, order, filter)
       dispatch({
         type: PORTFOLIO_LIST_SUCCESS,
         payload: data,
       })
-      
     } catch (error) {
       dispatch({
         type: PORTFOLIO_LIST_FAIL,
@@ -40,8 +39,6 @@ export const getPortfolios =
       })
     }
   }
-
-
 
 export const listPortfolios =
   (page = "", perPage = "", tags = []) =>
@@ -56,13 +53,12 @@ export const listPortfolios =
     try {
       dispatch({ type: PORTFOLIO_LIST_REQUEST })
 
-      let data = await getList(perPage,page,filter)
-      
+      let data = await getList(perPage, page, filter)
+
       dispatch({
         type: PORTFOLIO_LIST_SUCCESS,
         payload: data,
       })
-      
     } catch (error) {
       dispatch({
         type: PORTFOLIO_LIST_FAIL,
@@ -74,5 +70,17 @@ export const listPortfolios =
     }
   }
 
-  
-export default listPortfolios
+export const createNewPortfolio = (values) => async (dispatch) => {
+  try {
+    let res = await createPortfolio(values)
+    return res
+  } catch (error) {
+    dispatch({
+      type: PORTFOLIO_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}

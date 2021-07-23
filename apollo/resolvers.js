@@ -2,7 +2,7 @@ import Portfolio from "../models/portfolioModel.js"
 import Tag from "../models/tagModel.js"
 import User from "../models/userModel.js"
 import { generateToken } from "../utils/utils.js"
-import { ApolloError } from "apollo-server-errors"
+import mongoose from "mongoose"
 function getFilterObj(filter) {
   let filterObj = {}
 
@@ -120,6 +120,49 @@ export const resolvers = {
         }
       }
 
+      return {
+        error: "Something went wrong",
+        success: false,
+      }
+    },
+
+    async editTag(parent, args, context, info) {
+      const { id, name } = args
+      const result = await Tag.updateOne({ _id: id }, { name })
+      if (result.ok) {
+        return {
+          error: null,
+          success: true,
+        }
+      }
+
+      return {
+        error: "Something went wrong",
+        success: false,
+      }
+    },
+    async createPortfolio(parent, args, context, info) {
+      const { tags } = args
+
+      let tagsIds = tags.map((e) => {
+        return e.id
+      })
+      let insert = {
+        ...args,
+        tags: tagsIds,
+      }
+      let result
+      try {
+        result = await Portfolio.create(insert)
+      } catch (e) {
+        console.log(e)
+      }
+      if (result._id) {
+        return {
+          error: null,
+          success: true,
+        }
+      }
       return {
         error: "Something went wrong",
         success: false,
