@@ -5,6 +5,8 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGIN_FAIL,
+  UNSET_LOGIN_USER,
+  USER_SET,
 } from "../constants/userConstants"
 
 export const loginAttempt = (values) => async (dispatch) => {
@@ -50,7 +52,13 @@ export const loginAttempt = (values) => async (dispatch) => {
 export const setUser = () => async (dispatch) => {
   let user = getUserFromLocalStorage()
   dispatch({
-    type: USER_LOGIN_SUCCESS,
+    type: USER_SET,
     payload: user,
+  })
+}
+
+export const unsetUser = () => async (dispatch) => {
+  dispatch({
+    type: UNSET_LOGIN_USER,
   })
 }

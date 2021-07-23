@@ -3,23 +3,12 @@ import TextField from "@material-ui/core/TextField"
 import Dialog from "@material-ui/core/Dialog"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
-//import DialogContentText from "@material-ui/core/DialogContentText"
 import DialogTitle from "@material-ui/core/DialogTitle"
-import React, { useState } from "react"
+import React from "react"
+import useFormValues from "../../hooks/useFormValues"
 
-export default function FormDialog({ open, handleClose, handleSubmit }) {
-  const [values, setValues] = useState({
-    name: "",
-  })
-
-  function handleChange(e) {
-    const key = e.target.name
-    const value = e.target.value
-    setValues((values) => ({
-      ...values,
-      [key]: value,
-    }))
-  }
+export default function CreateTagModat({ open, handleClose, handleSubmit }) {
+  const [values, handleChange] = useFormValues({ name: "" })
 
   return (
     <div>

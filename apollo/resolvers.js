@@ -108,5 +108,22 @@ export const resolvers = {
       const tag = await Tag.create({ name })
       return tag.id
     },
+    async deleteTag(parent, args, context, info) {
+      const { id } = args
+
+      const result = await Tag.deleteOne({ _id: id })
+
+      if (result.deletedCount) {
+        return {
+          error: null,
+          success: true,
+        }
+      }
+
+      return {
+        error: "Something went wrong",
+        success: false,
+      }
+    },
   },
 }

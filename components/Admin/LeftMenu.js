@@ -30,7 +30,11 @@ const LeftMenu = () => {
     <div>
       <List className={classes.link}>
         <Link href="/admin">
-          <ListItem button className={asPath == "/admin" ? "active" : ""}>
+          <ListItem
+            button
+            className={asPath == "/admin" ? "active" : ""}
+            disabled={asPath == "/admin"}
+          >
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>

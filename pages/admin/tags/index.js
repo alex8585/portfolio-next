@@ -16,37 +16,43 @@ import { visuallyHidden } from "@material-ui/utils"
 import { wrapper } from "../../../store"
 import dbConnect from "../../../utils/dbConnect"
 import Tag from "../../../models/tagModel.js"
-import { getTags, setTags, createNewTag } from "../../../actions/tagActions"
+import {
+  getTags,
+  setTags,
+  createNewTag,
+  deleteTag,
+} from "../../../actions/tagActions"
 import { useDispatch, useSelector } from "react-redux"
 import { makeStyles } from "@material-ui/styles"
 import moment from "moment"
 import CreateTagModat from "../../../components/Admin/CreateTagModat.js"
-import { useRouter } from "next/router"
-import { setUser } from "../../../actions/userActions"
+import DeleteConfirmModal from "../../../components/Admin/DeleteConfirmModal"
 const useStyles = makeStyles((theme) => ({
-  btn: {
-    margin: "7px 0px",
+  topBtnsWrapp: {
+    margin: "15px 0",
   },
 }))
 
 const headCells = [
   {
     id: "id",
-    numeric: false,
-    disablePadding: false,
+    sortable: true,
     label: "ID",
   },
   {
     id: "name",
-    numeric: true,
-    disablePadding: false,
+    sortable: true,
     label: "Name",
   },
   {
     id: "createdAt",
-    numeric: true,
-    disablePadding: false,
+    sortable: true,
     label: "Created at",
+  },
+  {
+    id: "actions",
+    sortable: false,
+    label: "Actions",
   },
 ]
 
@@ -63,21 +69,26 @@ function EnhancedTableHead(props) {
           <TableCell
             key={headCell.id}
             align={"left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
+            padding={"normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
+            {headCell.sortable && (
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            )}
+            {!headCell.sortable && <span>{headCell.label}</span>}
           </TableCell>
         ))}
       </TableRow>
@@ -102,20 +113,10 @@ const Tags = () => {
 
   const classes = useStyles()
   const dispatch = useDispatch()
-  const router = useRouter()
-  const { user, loaded: userLoaded } = useSelector((state) => state.user)
+
   // Avoid a layout jump when reaching the last page with empty tags.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - total) : 0
 
-  useEffect(async () => {
-    dispatch(setUser())
-  }, [dispatch])
-
-  if (userLoaded && (!user || !user.isAdmin)) {
-    router.push("/login")
-  }
-
-  
   const handleRequestSort = (event, field) => {
     const isAsc = orderBy === field && order === "asc"
     const newOrder = isAsc ? "desc" : "asc"
@@ -123,32 +124,34 @@ const Tags = () => {
     setOrderBy(field)
     dispatch(getTags(page + 1, rowsPerPage, newOrder, field))
   }
-  
+
   const { data: tags, total } = useSelector((state) => state.tagList)
-  
+
   const handleChangePage = (event, newPage) => {
     dispatch(getTags(newPage + 1, rowsPerPage, order, orderBy))
     setPage(newPage)
   }
-  
+
   const handleChangeRowsPerPage = (event) => {
     let perPage = parseInt(event.target.value, 10)
     dispatch(getTags(1, perPage, order, orderBy))
     setRowsPerPage(perPage)
     setPage(0)
   }
-  
+
   const dateFormat = (timestamp) => {
     timestamp = parseInt(timestamp)
     return moment(timestamp).format("DD-MM-YYYY:HH:MM")
   }
-  
+
   const [openCreateModal, setOpenCreateModal] = useState(false)
-  
+  const [openDeleteConfirmModal, setOpenDeleteConfirmModal] = useState(false)
+  const [currentRow, setCurrentRow] = useState({})
+
   const openCreateModalHandler = () => {
     setOpenCreateModal(true)
   }
-  
+
   const closeCreateModalHandler = () => {
     setOpenCreateModal(false)
   }
@@ -160,20 +163,43 @@ const Tags = () => {
     await dispatch(getTags(page + 1, rowsPerPage, order, orderBy))
     setOpenCreateModal(false)
   }
-  
-  if (!userLoaded || !user) {
-    return null
+
+  const handleOpenDeleteConfirmModel = (row) => {
+    setCurrentRow(row)
+    setOpenDeleteConfirmModal(true)
   }
+
+  const closeDeleteConfirmModalHandler = () => {
+    setOpenDeleteConfirmModal(false)
+  }
+
+  const handleDeleteConfirm = async () => {
+    dispatch(deleteTag(currentRow.id))
+    await dispatch(getTags(page + 1, rowsPerPage, order, orderBy))
+    setOpenDeleteConfirmModal(false)
+  }
+
   return (
     <AdminLayout>
+      <CreateTagModat
+        handleSubmit={createSubminHanler}
+        open={openCreateModal}
+        handleClose={closeCreateModalHandler}
+      />
+      <DeleteConfirmModal
+        currentRow={currentRow}
+        handleConfirm={handleDeleteConfirm}
+        open={openDeleteConfirmModal}
+        handleClose={closeDeleteConfirmModalHandler}
+      />
+
       <Box sx={{ width: "100%" }}>
-        <Button
-          className={classes.btn}
-          variant="contained"
-          onClick={() => openCreateModalHandler()}
-        >
-          Create
-        </Button>
+        <div className={classes.topBtnsWrapp}>
+          <Button variant="contained" onClick={() => openCreateModalHandler()}>
+            Create
+          </Button>
+        </div>
+
         <Paper sx={{ width: "100%", mb: 2 }}>
           <TableContainer>
             <Table
@@ -192,7 +218,6 @@ const Tags = () => {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       tabIndex={-1}
                       key={row.name}
@@ -200,8 +225,16 @@ const Tags = () => {
                       <TableCell> {row.id}</TableCell>
                       <TableCell> {row.name}</TableCell>
                       <TableCell align="left">
-                        {" "}
-                        {dateFormat(row.createdTs)}{" "}
+                        {dateFormat(row.createdTs)}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => handleOpenDeleteConfirmModel(row)}
+                        >
+                          Delete
+                        </Button>
                       </TableCell>
                     </TableRow>
                   )
@@ -229,11 +262,6 @@ const Tags = () => {
           />
         </Paper>
       </Box>
-      <CreateTagModat
-        handleSubmit={createSubminHanler}
-        open={openCreateModal}
-        handleClose={closeCreateModalHandler}
-      />
     </AdminLayout>
   )
 }

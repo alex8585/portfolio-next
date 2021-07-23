@@ -28,6 +28,11 @@ export const typeDefs = gql`
     error: String
   }
 
+  type DeleteResponce {
+    error: String
+    success: Boolean
+  }
+
   input filterType {
     tags: String
   }
@@ -54,5 +59,6 @@ export const typeDefs = gql`
 
   type Mutation {
     createTag(name: String): ID!
+    deleteTag(id: ID!): DeleteResponce
   }
 `

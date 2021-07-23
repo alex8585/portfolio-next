@@ -26,3 +26,7 @@ export const getUserTokenFromLocalStorage = () => {
   }
   return user.token
 }
+
+export const deleteUserFromLocalStorage = () => {
+  localStorage.removeItem("user")
+}

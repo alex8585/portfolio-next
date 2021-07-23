@@ -12,7 +12,7 @@ import Button from "@material-ui/core/Button"
 import { useDispatch, useSelector } from "react-redux"
 import Alert from "@material-ui/core/Alert"
 import { loginAttempt } from "../actions/userActions"
-import { setUser } from "../actions/userActions"
+import useUser from "../hooks/useUser"
 
 import { useRouter } from "next/router"
 const useStyles = makeStyles((theme) => ({
@@ -68,11 +68,7 @@ const About = ({ match, location, history }) => {
     password: "",
   })
 
-  const { user, loaded: userLoaded, error } = useSelector((state) => state.user)
-
-  useEffect(async () => {
-    dispatch(setUser())
-  }, [dispatch])
+  const [user, userLoaded, error] = useUser()
 
   if (userLoaded && user) {
     router.push("/admin")

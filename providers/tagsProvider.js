@@ -31,6 +31,14 @@ const CREATE_TAG_QUERY = gql`
     createTag(name: $name)
   }
 `
+const DELETE_TAG_QUERY = gql`
+  mutation DeleteTag($id: ID!) {
+    deleteTag(id: $id) {
+      error
+      success
+    }
+  }
+`
 
 export const getList = async (
   perPage = 6,
@@ -59,6 +67,16 @@ export const createTag = async (values) => {
   let res = await client.query({
     query: CREATE_TAG_QUERY,
     variables: { name },
+    fetchPolicy: "no-cache",
+  })
+
+  return res
+}
+
+export const deleteTagRequest = async (id) => {
+  let res = await client.query({
+    query: DELETE_TAG_QUERY,
+    variables: { id },
     fetchPolicy: "no-cache",
   })
 
