@@ -2,10 +2,14 @@ import { useMemo } from "react"
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client"
 import { setContext } from "@apollo/client/link/context"
 import { getUserTokenFromLocalStorage } from "../utils/utils"
+import { createUploadLink } from "apollo-upload-client"
 let apolloClient
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: "/api/graphql",
+  headers: {
+    "keep-alive": "true",
+  },
 })
 
 const authLink = setContext((_, { headers }) => {
@@ -25,11 +29,6 @@ function createIsomorphLink() {
     return new SchemaLink({ schema })
   } else {
     return authLink.concat(httpLink)
-    // const { HttpLink } = require("@apollo/client/link/http")
-    // return new HttpLink({
-    //   uri: "/api/graphql",
-    //   credentials: "same-origin",
-    // })
   }
 }
 

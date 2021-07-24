@@ -1,11 +1,14 @@
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
 })
 
 const nextConfig = {
+  serverRuntimeConfig: {
+    PROJECT_ROOT: __dirname,
+  },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.experiments = {
-      topLevelAwait: true
+      topLevelAwait: true,
     }
     return config
   },

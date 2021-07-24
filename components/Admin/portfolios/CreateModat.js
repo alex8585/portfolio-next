@@ -13,6 +13,7 @@ import Select from "@material-ui/core/Select"
 import Chip from "@material-ui/core/Chip"
 import Box from "@material-ui/core/Box"
 import React, { useState } from "react"
+import { uploadFileRequest } from "../../../providers/filesProveder"
 export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
   const [values, handleChange, setValues] = useFormValues({
     name: "",
@@ -31,6 +32,13 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
   }
 
   const [errors, setErrors] = useState(initialErrorsState)
+
+  const handleChangeFile = (e) => {
+    //const file = this.fileUpload.files[0]
+    // console.log(file)
+    let file = e.target.files[0]
+    uploadFileRequest(file)
+  }
 
   function handleChangeSelect(e) {
     const tags = e.target.value
@@ -106,7 +114,7 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
           {/* <input type="file" onChange={this.onFileChange} />  */}
           <TextField
             error={errors.img ? true : false}
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChangeFile(e)}
             name="img"
             autoFocus
             margin="dense"

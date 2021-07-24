@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client"
 
 export const typeDefs = gql`
-  scalar Upload
+  scalar FileUpload
   type File {
     filename: String!
     mimetype: String!
@@ -82,6 +82,6 @@ export const typeDefs = gql`
     ): ActionResponce
 
     deletePortfolio(id: ID!): ActionResponce
-    uploadFile(file: Upload!): File!
+    uploadFile(a: String, file: FileUpload!): File!
   }
 `

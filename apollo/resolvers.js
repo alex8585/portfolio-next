@@ -3,9 +3,11 @@ import Tag from "../models/tagModel.js"
 import User from "../models/userModel.js"
 import { generateToken } from "../utils/utils.js"
 //import mongoose from "mongoose"
+import storeUpload from "../utils/storeUpload.js"
 
-import { GraphQLUpload, graphqlUploadExpress } from "graphql-upload"
+import { GraphQLUpload } from "graphql-upload"
 
+//import { ApolloServer, gql, GraphQLUpload } from "apollo-server-micro"
 function getFilterObj(filter) {
   let filterObj = {}
 
@@ -17,8 +19,7 @@ function getFilterObj(filter) {
 }
 
 export const resolvers = {
-  Upload: GraphQLUpload,
-
+  FileUpload: GraphQLUpload,
   Query: {
     async getTags(parent, args, context, info) {
       const { perPage, filter, page, direction, order } = args
@@ -191,19 +192,20 @@ export const resolvers = {
       }
     },
 
-    uploadFile: async (parent, { file }) => {
-      const { createReadStream, filename, mimetype, encoding } = await file
+    uploadFile: async (parent, args, context, info) => {
+      const { createReadStream, filename, mimetype, encoding } = await args.file
 
+      storeUpload(args.file)
       // Invoking the `createReadStream` will return a Readable Stream.
       // See https://nodejs.org/api/stream.html#stream_readable_streams
-      const stream = createReadStream()
+      // const stream = createReadStream()
 
-      // This is purely for demonstration purposes and will overwrite the
-      // local-file-output.txt in the current working directory on EACH upload.
-      const out = require("fs").createWriteStream("local-file-output.txt")
-      stream.pipe(out)
-      await finished(out)
-
+      // // This is purely for demonstration purposes and will overwrite the
+      // // local-file-output.txt in the current working directory on EACH upload.
+      // const out = require("fs").createWriteStream("local-file-output.txt")
+      // stream.pipe(out)
+      // await finished(out)
+      //let filename = "1111"
       return { filename, mimetype, encoding }
     },
   },
