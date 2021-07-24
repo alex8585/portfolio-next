@@ -52,7 +52,14 @@ const CREATE_PORTFOLIO_QUERY = gql`
     }
   }
 `
-
+const DELETE_PORTFOLIO_QUERY = gql`
+  mutation DeletePortfolio($id: ID!) {
+    deletePortfolio(id: $id) {
+      error
+      success
+    }
+  }
+`
 export const getList = async (
   perPage = 6,
   page = 1,
@@ -79,6 +86,16 @@ export const createPortfolio = async (values) => {
   let res = await client.query({
     query: CREATE_PORTFOLIO_QUERY,
     variables: { ...values },
+    fetchPolicy: "no-cache",
+  })
+
+  return res
+}
+
+export const deletePortfolioRequest = async (id) => {
+  let res = await client.query({
+    query: DELETE_PORTFOLIO_QUERY,
+    variables: { id },
     fetchPolicy: "no-cache",
   })
 

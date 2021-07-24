@@ -2843,6 +2843,11 @@
   "resolved" "https://registry.npmjs.org/fs-capacitor/-/fs-capacitor-2.0.4.tgz"
   "version" "2.0.4"
 
+"fs-capacitor@^6.2.0":
+  "integrity" "sha512-nKcE1UduoSKX27NSZlg879LdQc94OtbOsEmKMN2MBNudXREvijRKx2GEBsTMTfws+BrbkJoEuynbGSVRSpauvw=="
+  "resolved" "https://registry.npmjs.org/fs-capacitor/-/fs-capacitor-6.2.0.tgz"
+  "version" "6.2.0"
+
 "fs.realpath@^1.0.0":
   "integrity" "sha1-FQStJSMVjKpA20onh8sBQRmU6k8="
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
@@ -3002,6 +3007,17 @@
   optionalDependencies:
     "@apollo/client" "~3.2.5 || ~3.3.0"
 
+"graphql-upload@^12.0.0":
+  "integrity" "sha512-ovZ3Q7sZ17Bmn8tYl22MfrpNR7nYM/DUszXWgkue7SFIlI9jtqszHAli8id8ZcnGBc9GF0gUTNSskYWW+5aNNQ=="
+  "resolved" "https://registry.npmjs.org/graphql-upload/-/graphql-upload-12.0.0.tgz"
+  "version" "12.0.0"
+  dependencies:
+    "busboy" "^0.3.1"
+    "fs-capacitor" "^6.2.0"
+    "http-errors" "^1.8.0"
+    "isobject" "^4.0.0"
+    "object-path" "^0.11.5"
+
 "graphql-ws@^4.4.1":
   "integrity" "sha512-sHkK9+lUm20/BGawNEWNtVAeJzhZeBg21VmvmLoT5NdGVeZWv5PdIhkcayQIAgjSyyQ17WMKmbDijIPG2On+Ag=="
   "resolved" "https://registry.npmjs.org/graphql-ws/-/graphql-ws-4.9.0.tgz"
@@ -3090,6 +3106,17 @@
     "react-is" "^16.7.0"
 
 "http-errors@^1.7.3":
+  "integrity" "sha512-4I8r0C5JDhT5VkvI47QktDW75rNlGVsUf/8hzjCC/wkWI/jdTRmBb9aI7erSG82r1bjKY3F6k28WnsVxB1C73A=="
+  "resolved" "https://registry.npmjs.org/http-errors/-/http-errors-1.8.0.tgz"
+  "version" "1.8.0"
+  dependencies:
+    "depd" "~1.1.2"
+    "inherits" "2.0.4"
+    "setprototypeof" "1.2.0"
+    "statuses" ">= 1.5.0 < 2"
+    "toidentifier" "1.0.0"
+
+"http-errors@^1.8.0":
   "integrity" "sha512-4I8r0C5JDhT5VkvI47QktDW75rNlGVsUf/8hzjCC/wkWI/jdTRmBb9aI7erSG82r1bjKY3F6k28WnsVxB1C73A=="
   "resolved" "https://registry.npmjs.org/http-errors/-/http-errors-1.8.0.tgz"
   "version" "1.8.0"
@@ -3358,6 +3385,11 @@
   "integrity" "sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE="
   "resolved" "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
   "version" "1.0.0"
+
+"isobject@^4.0.0":
+  "integrity" "sha512-S/2fF5wH8SJA/kmwr6HYhK/RI/OkhD84k8ntalo0iJjZikgq1XFvR5M8NPT1x5F7fBwCG3qHfnzeP/Vh/ZxCUA=="
+  "resolved" "https://registry.npmjs.org/isobject/-/isobject-4.0.0.tgz"
+  "version" "4.0.0"
 
 "isomorphic-ws@4.0.1":
   "integrity" "sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w=="
@@ -3980,7 +4012,7 @@
   "resolved" "https://registry.npmjs.org/object-keys/-/object-keys-1.1.1.tgz"
   "version" "1.1.1"
 
-"object-path@^0.11.4":
+"object-path@^0.11.4", "object-path@^0.11.5":
   "integrity" "sha512-jgSbThcoR/s+XumvGMTMf81QVBmah+/Q7K7YduKeKVWL7N111unR2d6pZZarSk6kY/caeNxUDyxOvMWyzoU2eg=="
   "resolved" "https://registry.npmjs.org/object-path/-/object-path-0.11.5.tgz"
   "version" "0.11.5"

@@ -5,6 +5,12 @@ import { applyMiddleware } from "graphql-middleware"
 import { shield, rule, and, or } from "graphql-shield"
 import jwt from "jsonwebtoken"
 import User from "../../models/userModel.js"
+
+import {
+  GraphQLUpload,
+  graphqlUploadExpress, // A Koa implementation is also exported.
+} from "graphql-upload"
+
 await dbConnect()
 
 export const config = {

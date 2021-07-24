@@ -168,5 +168,22 @@ export const resolvers = {
         success: false,
       }
     },
+    async deletePortfolio(parent, args, context, info) {
+      const { id } = args
+
+      const result = await Portfolio.deleteOne({ _id: id })
+
+      if (result.deletedCount) {
+        return {
+          error: null,
+          success: true,
+        }
+      }
+
+      return {
+        error: "Something went wrong",
+        success: false,
+      }
+    },
   },
 }

@@ -73,5 +73,7 @@ export const typeDefs = gql`
       tags: [tagInput]
       order_number: String
     ): ActionResponce
+
+    deletePortfolio(id: ID!): ActionResponce
   }
 `

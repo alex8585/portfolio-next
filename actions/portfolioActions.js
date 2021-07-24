@@ -4,7 +4,7 @@ import {
   PORTFOLIO_LIST_FAIL,
 } from "../constants/portfolioConstants"
 
-import { getList, createPortfolio } from "../providers/portfoliosProvider.js"
+import { getList, createPortfolio,deletePortfolioRequest } from "../providers/portfoliosProvider.js"
 
 export const setPortfolios =
   (portfolios, perPage, total) => async (dispatch) => {
@@ -73,6 +73,21 @@ export const listPortfolios =
 export const createNewPortfolio = (values) => async (dispatch) => {
   try {
     let res = await createPortfolio(values)
+    return res
+  } catch (error) {
+    dispatch({
+      type: PORTFOLIO_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const deletePortfolio = (id) => async (dispatch) => {
+  try {
+    let res = await deletePortfolioRequest(id)
     return res
   } catch (error) {
     dispatch({

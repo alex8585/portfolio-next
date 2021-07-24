@@ -15,7 +15,12 @@ import Paper from "@material-ui/core/Paper"
 import { visuallyHidden } from "@material-ui/utils"
 import { wrapper } from "../../../store"
 import dbConnect from "../../../utils/dbConnect"
-import { setPortfolios, getPortfolios,createNewPortfolio } from "../../../actions/portfolioActions"
+import {
+  setPortfolios,
+  getPortfolios,
+  createNewPortfolio,
+  deletePortfolio,
+} from "../../../actions/portfolioActions"
 import { useDispatch, useSelector } from "react-redux"
 import moment from "moment"
 import Portfolio from "../../../models/portfolioModel"
@@ -26,13 +31,7 @@ import DeleteConfirmModal from "../../../components/Admin/DeleteConfirmModal"
 import { makeStyles } from "@material-ui/styles"
 import Button from "@material-ui/core/Button"
 import Tag from "../../../models/tagModel.js"
-import {
-  getTags,
-  setTags,
-  createNewTag,
-  deleteTag,
-  editTag,
-} from "../../../actions/tagActions"
+import { getTags, setTags } from "../../../actions/tagActions"
 const useStyles = makeStyles((theme) => ({
   topBtnsWrapp: {
     margin: "15px 0",
@@ -177,9 +176,6 @@ const Portfolios = () => {
     setOpenCreateModal(false)
   }
   const createSubminHanler = async (values) => {
-    if (!values.name) {
-      return
-    }
     await dispatch(createNewPortfolio(values))
     await dispatch(getPortfolios(page + 1, rowsPerPage, order, orderBy))
     setOpenCreateModal(false)
@@ -195,8 +191,8 @@ const Portfolios = () => {
   }
 
   const handleDeleteConfirm = async () => {
-    dispatch(deleteTag(currentRow.id))
-    await dispatch(getTags(page + 1, rowsPerPage, order, orderBy))
+    dispatch(deletePortfolio(currentRow.id))
+    await dispatch(getPortfolios(page + 1, rowsPerPage, order, orderBy))
     setOpenDeleteConfirmModal(false)
   }
 
@@ -222,6 +218,13 @@ const Portfolios = () => {
         handleSubmit={createSubminHanler}
         open={openCreateModal}
         handleClose={closeCreateModalHandler}
+      />
+      <DeleteConfirmModal
+        title="Delete portfolio confirmation"
+        currentRow={currentRow}
+        handleConfirm={handleDeleteConfirm}
+        open={openDeleteConfirmModal}
+        handleClose={closeDeleteConfirmModalHandler}
       />
       <Box sx={{ width: "100%" }}>
         <div className={classes.topBtnsWrapp}>
@@ -262,7 +265,7 @@ const Portfolios = () => {
                           height={75}
                         />
                       </TableCell>
-                      <TableCell> {row.url}</TableCell>
+                      <TableCell> {row.url.substring(0, 20)}</TableCell>
 
                       <TableCell align="left">
                         {" "}

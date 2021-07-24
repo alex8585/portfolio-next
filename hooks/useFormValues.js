@@ -18,5 +18,5 @@ export default function useFormValues(initialState) {
     }))
   }
 
-  return [values, handleChange, resetFormValues]
+  return [values, handleChange, setValues, resetFormValues]
 }
