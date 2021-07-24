@@ -1,71 +1,20 @@
 import { ApolloServer } from "apollo-server-micro"
 import { schema } from "../../apollo/schema"
-import dbConnect from "../../utils/dbConnect"
 import { applyMiddleware } from "graphql-middleware"
-import { shield, rule, and, or } from "graphql-shield"
-import jwt from "jsonwebtoken"
-import User from "../../models/userModel.js"
 
-import {
-  GraphQLUpload,
-  graphqlUploadExpress, // A Koa implementation is also exported.
-} from "graphql-upload"
+import { GraphQLUpload, graphqlUploadExpress } from "graphql-upload"
+import express from "express"
+import setUser from "../../middleware/graphql/setUser"
+import permissions from "../../middleware/graphql/permissions"
+import mongoose from "../../middleware/mongoose.js"
 
-await dbConnect()
+const expressApp = express()
 
 export const config = {
   api: {
     bodyParser: false,
   },
 }
-
-const setUser = async (resolve, root, args, ctx, info) => {
-  let token = ctx.token
-
-  if (token) {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-    if (decoded && decoded.id) {
-      let user = null
-      try {
-        user = await User.findById(decoded.id).select("-password")
-      } catch (e) {
-        console.log(e)
-      }
-
-      if (user && user.id) {
-        ctx.user = user
-      }
-    }
-  }
-
-  const result = await resolve(root, args, ctx, info)
-  return result
-}
-
-const isAuthenticated = rule({ cache: "contextual" })(
-  async (parent, args, ctx, info) => {
-    if (ctx.user.id) {
-      return true
-    }
-    return false
-  }
-)
-
-const isAdmin = rule({ cache: "contextual" })(
-  async (parent, args, ctx, info) => {
-    if (ctx.user.isAdmin) {
-      return true
-    }
-    return false
-  }
-)
-
-const permissions = shield({
-  Query: {
-    getTags: and(isAuthenticated, isAdmin),
-  },
-})
 
 const schemaWithMiddleware = applyMiddleware(schema, setUser, permissions)
 
@@ -83,4 +32,12 @@ const apolloServer = new ApolloServer({
     return { token }
   },
 })
-export default apolloServer.createHandler({ path: "/api/graphql" })
+await apolloServer.start()
+
+let apoloHandler = await apolloServer.createHandler({ path: "/api/graphql" })
+
+expressApp.use(mongoose())
+expressApp.use(graphqlUploadExpress())
+expressApp.use(apoloHandler)
+
+export default expressApp

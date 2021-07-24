@@ -1,6 +1,8 @@
 import { gql } from "@apollo/client"
 
 export const typeDefs = gql`
+  scalar Upload
+
   type Tag {
     id: ID!
     name: String

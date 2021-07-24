@@ -2,7 +2,13 @@ import Portfolio from "../models/portfolioModel.js"
 import Tag from "../models/tagModel.js"
 import User from "../models/userModel.js"
 import { generateToken } from "../utils/utils.js"
-import mongoose from "mongoose"
+//import mongoose from "mongoose"
+
+import {
+  GraphQLUpload,
+  graphqlUploadExpress,
+} from "graphql-upload"
+
 function getFilterObj(filter) {
   let filterObj = {}
 
@@ -14,6 +20,8 @@ function getFilterObj(filter) {
 }
 
 export const resolvers = {
+  Upload: GraphQLUpload,
+
   Query: {
     async getTags(parent, args, context, info) {
       const { perPage, filter, page, direction, order } = args
