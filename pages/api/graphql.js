@@ -1,6 +1,8 @@
 import { ApolloServer } from "apollo-server-micro"
 import { schema } from "../../apollo/schema"
 import { applyMiddleware } from "graphql-middleware"
+import invariant from "tiny-invariant"
+invariant(1111, "This should not throw!")
 
 import { GraphQLUpload, graphqlUploadExpress } from "graphql-upload"
 import express from "express"
