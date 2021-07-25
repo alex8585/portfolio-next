@@ -14,30 +14,37 @@ import Chip from "@material-ui/core/Chip"
 import Box from "@material-ui/core/Box"
 import React, { useState } from "react"
 import { uploadFileRequest } from "../../../providers/filesProveder"
+import Image from "next/image"
+
 export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
-  const [values, handleChange, setValues] = useFormValues({
+  const inititalValues = {
     name: "",
-    img: "",
     url: "",
     order_number: "",
     tags: [],
-  })
+  }
+
+  const [values, handleChange, setValues] = useFormValues(inititalValues)
 
   const initialErrorsState = {
     name: null,
-    img: null,
     url: null,
     order_number: null,
     tags: null,
   }
 
-  const [errors, setErrors] = useState(initialErrorsState)
+  const fileInitialValue = {
+    url: null,
+    name: "",
+  }
 
-  const handleChangeFile = (e) => {
-    //const file = this.fileUpload.files[0]
-    // console.log(file)
+  const [errors, setErrors] = useState(initialErrorsState)
+  const [uploadedFile, setUploadedFile] = useState(fileInitialValue)
+
+  const handleChangeFile = async (e) => {
     let file = e.target.files[0]
-    uploadFileRequest(file)
+    const uploadedFile = await uploadFileRequest(file)
+    setUploadedFile(uploadedFile)
   }
 
   function handleChangeSelect(e) {
@@ -80,7 +87,7 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
       isErrors = true
       errors.url = "Required"
     }
-    if (!values.img) {
+    if (!uploadedFile.name) {
       isErrors = true
       errors.img = "Required"
     }
@@ -88,7 +95,13 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
     if (isErrors) {
       setErrors(errors)
     } else {
-      handleSubmit(values)
+      let sendData = {
+        ...values,
+        uploadedFile: uploadedFile.name,
+      }
+      setValues(inititalValues)
+      setUploadedFile(fileInitialValue)
+      handleSubmit(sendData)
     }
   }
 
@@ -111,7 +124,20 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
             value={values.name}
             helperText={errors.name}
           />
-          {/* <input type="file" onChange={this.onFileChange} />  */}
+          <input
+            type="hidden"
+            name="uploadedFile"
+            value={uploadedFile.name}
+          ></input>
+          {uploadedFile.url && (
+            <Image
+              onClick={() => setCurrentImage(i)}
+              src={uploadedFile.url}
+              alt="Uploaded img"
+              width={400}
+              height={300}
+            />
+          )}
           <TextField
             error={errors.img ? true : false}
             onChange={(e) => handleChangeFile(e)}

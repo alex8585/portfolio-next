@@ -24,9 +24,10 @@ const authLink = setContext((_, { headers }) => {
 
 function createIsomorphLink() {
   if (typeof window === "undefined") {
-    const { SchemaLink } = require("@apollo/client/link/schema")
-    const { schema } = require("./schema")
-    return new SchemaLink({ schema })
+    console.log("error window undefined")
+    // const { SchemaLink } = require("@apollo/client/link/schema")
+    // const { schema } = require("./schema")
+    // return new SchemaLink({ schema })
   } else {
     return authLink.concat(httpLink)
   }
@@ -36,7 +37,9 @@ function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: createIsomorphLink(),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      addTypename: false,
+    }),
   })
 }
 

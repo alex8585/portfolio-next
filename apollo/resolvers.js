@@ -2,8 +2,15 @@ import Portfolio from "../models/portfolioModel.js"
 import Tag from "../models/tagModel.js"
 import User from "../models/userModel.js"
 import { generateToken } from "../utils/utils.js"
+import fs from "fs"
 //import mongoose from "mongoose"
-import storeUpload from "../utils/storeUpload.js"
+import {
+  storeUpload,
+  getTmpUploadsPath,
+  getUploadsPath,
+  getImgUrl,
+  pathByUrl,
+} from "../utils/storeUpload"
 
 import { GraphQLUpload } from "graphql-upload"
 
@@ -20,6 +27,7 @@ function getFilterObj(filter) {
 
 export const resolvers = {
   FileUpload: GraphQLUpload,
+  Upload: GraphQLUpload,
   Query: {
     async getTags(parent, args, context, info) {
       const { perPage, filter, page, direction, order } = args
@@ -148,7 +156,14 @@ export const resolvers = {
       }
     },
     async createPortfolio(parent, args, context, info) {
-      const { tags } = args
+      const { tags, uploadedFile } = args
+
+      let tmpFile = getTmpUploadsPath(uploadedFile)
+      let filePath = getUploadsPath() + "portfolios/" + uploadedFile
+      let img = getImgUrl() + "portfolios/" + uploadedFile
+      img = img.replace(/^\/+/g, "")
+
+      fs.renameSync(tmpFile, filePath)
 
       let tagsIds = tags.map((e) => {
         return e.id
@@ -156,6 +171,7 @@ export const resolvers = {
       let insert = {
         ...args,
         tags: tagsIds,
+        img,
       }
       let result
       try {
@@ -174,12 +190,22 @@ export const resolvers = {
         success: false,
       }
     },
+
     async deletePortfolio(parent, args, context, info) {
       const { id } = args
 
-      const result = await Portfolio.deleteOne({ _id: id })
+      let portfolio = await Portfolio.findById(id)
 
-      if (result.deletedCount) {
+      let imgPath = pathByUrl(portfolio.img)
+
+      fs.unlink(imgPath, function (err) {
+        if (err) return console.log(err)
+      })
+
+      let result = await portfolio.remove()
+      //const result = await Portfolio.deleteOne({ _id: id })
+
+      if (result && result._id) {
         return {
           error: null,
           success: true,
@@ -193,20 +219,46 @@ export const resolvers = {
     },
 
     uploadFile: async (parent, args, context, info) => {
-      const { createReadStream, filename, mimetype, encoding } = await args.file
+      const { file } = await args
+      let [path, url, name] = await storeUpload(file)
 
-      storeUpload(args.file)
-      // Invoking the `createReadStream` will return a Readable Stream.
-      // See https://nodejs.org/api/stream.html#stream_readable_streams
-      // const stream = createReadStream()
+      return { path, url, name }
+    },
 
-      // // This is purely for demonstration purposes and will overwrite the
-      // // local-file-output.txt in the current working directory on EACH upload.
-      // const out = require("fs").createWriteStream("local-file-output.txt")
-      // stream.pipe(out)
-      // await finished(out)
-      //let filename = "1111"
-      return { filename, mimetype, encoding }
+    async editPortfolio(parent, args, context, info) {
+      const { id, tags, uploadedFile } = args
+
+      console.log(args)
+
+      let tagsIds = tags.map((e) => {
+        return e.id
+      })
+
+      let update = {
+        ...args,
+        tags: tagsIds,
+      }
+
+      const result = await Portfolio.updateOne({ _id: id }, update)
+      console.log(result)
+      if (result && result.ok > 0) {
+        return {
+          error: null,
+          success: true,
+        }
+      }
+
+      return {
+        error: "Something went wrong",
+        success: false,
+      }
+
+      // let tmpFile = getTmpUploadsPath(uploadedFile)
+      // let filePath = getUploadsPath() + "portfolios/" + uploadedFile
+      // let img = getImgUrl() + "portfolios/" + uploadedFile
+      // img = img.replace(/^\/+/g, "")
+
+      // fs.renameSync(tmpFile, filePath)
     },
   },
 }

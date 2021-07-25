@@ -1,18 +1,14 @@
 import AdminLayout from "../../../components/Admin/AdminLayout"
 import React, { useState } from "react"
-import PropTypes from "prop-types"
 import Box from "@material-ui/core/Box"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
 import TableContainer from "@material-ui/core/TableContainer"
-import TableHead from "@material-ui/core/TableHead"
 import TablePagination from "@material-ui/core/TablePagination"
 import TableRow from "@material-ui/core/TableRow"
-import TableSortLabel from "@material-ui/core/TableSortLabel"
 
 import Paper from "@material-ui/core/Paper"
-import { visuallyHidden } from "@material-ui/utils"
 import { wrapper } from "../../../store"
 import dbConnect from "../../../utils/dbConnect"
 import {
@@ -20,6 +16,7 @@ import {
   getPortfolios,
   createNewPortfolio,
   deletePortfolio,
+  editPortfolio,
 } from "../../../actions/portfolioActions"
 import { useDispatch, useSelector } from "react-redux"
 import moment from "moment"
@@ -32,6 +29,8 @@ import { makeStyles } from "@material-ui/styles"
 import Button from "@material-ui/core/Button"
 import Tag from "../../../models/tagModel.js"
 import { getTags, setTags } from "../../../actions/tagActions"
+import AdminTableHead from "../../../components/Admin/AdminTableHead"
+
 const useStyles = makeStyles((theme) => ({
   topBtnsWrapp: {
     margin: "15px 0",
@@ -45,77 +44,35 @@ const useStyles = makeStyles((theme) => ({
 const headCells = [
   {
     id: "id",
-    numeric: false,
-    disablePadding: false,
+    sortable: true,
     label: "ID",
   },
   {
     id: "name",
-    numeric: true,
-    disablePadding: false,
+    sortable: true,
     label: "Name",
   },
   {
     id: "img",
-    numeric: false,
-    disablePadding: false,
+    sortable: true,
     label: "Img",
   },
   {
     id: "url",
-    numeric: true,
-    disablePadding: false,
+    sortable: true,
     label: "Url",
   },
   {
     id: "createdAt",
-    numeric: true,
-    disablePadding: false,
+    sortable: true,
     label: "Created at",
   },
+  {
+    id: "actions",
+    sortable: false,
+    label: "Actions",
+  },
 ]
-
-function EnhancedTableHead(props) {
-  const { order, orderBy, onRequestSort } = props
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property)
-  }
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={"left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  )
-}
-
-EnhancedTableHead.propTypes = {
-  onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-}
 
 let initPerPage = 5
 
@@ -191,7 +148,7 @@ const Portfolios = () => {
   }
 
   const handleDeleteConfirm = async () => {
-    dispatch(deletePortfolio(currentRow.id))
+    await dispatch(deletePortfolio(currentRow.id))
     await dispatch(getPortfolios(page + 1, rowsPerPage, order, orderBy))
     setOpenDeleteConfirmModal(false)
   }
@@ -206,9 +163,9 @@ const Portfolios = () => {
   }
 
   const handleEditSubmit = async () => {
-    //console.log(currentRow)
-    dispatch(editTag(currentRow))
-    await dispatch(getTags(page + 1, rowsPerPage, order, orderBy))
+    console.log(currentRow)
+    await dispatch(editPortfolio(currentRow))
+    await dispatch(getPortfolios(page + 1, rowsPerPage, order, orderBy))
     setOpenEditModal(false)
   }
   return (
@@ -226,6 +183,14 @@ const Portfolios = () => {
         open={openDeleteConfirmModal}
         handleClose={closeDeleteConfirmModalHandler}
       />
+      <EditModal
+        tags={tags}
+        setCurrentRow={setCurrentRow}
+        currentRow={currentRow}
+        handleSubmit={handleEditSubmit}
+        open={openEditModal}
+        handleClose={closeEditModalHandler}
+      />
       <Box sx={{ width: "100%" }}>
         <div className={classes.topBtnsWrapp}>
           <Button variant="contained" onClick={() => openCreateModalHandler()}>
@@ -239,7 +204,8 @@ const Portfolios = () => {
               aria-labelledby="tableTitle"
               size={"medium"}
             >
-              <EnhancedTableHead
+              <AdminTableHead
+                headCells={headCells}
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
@@ -253,13 +219,15 @@ const Portfolios = () => {
                       onClick={(event) => handleRowClick(event, row.id)}
                       role="checkbox"
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.id}
                     >
                       <TableCell> {row.id}</TableCell>
                       <TableCell> {row.name}</TableCell>
                       <TableCell>
                         <Image
-                          src={"/" + row.img}
+                          src={
+                            row.img ? "/" + row.img.replace(/^\/+/g, "") : ""
+                          }
                           alt={row.name}
                           width={100}
                           height={75}

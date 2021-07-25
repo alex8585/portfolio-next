@@ -1,21 +1,16 @@
 import AdminLayout from "../../../components/Admin/AdminLayout"
 import React, { useState, useEffect } from "react"
-import PropTypes from "prop-types"
 import Box from "@material-ui/core/Box"
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
 import TableContainer from "@material-ui/core/TableContainer"
-import TableHead from "@material-ui/core/TableHead"
 import TablePagination from "@material-ui/core/TablePagination"
 import TableRow from "@material-ui/core/TableRow"
-import TableSortLabel from "@material-ui/core/TableSortLabel"
-import Button from "@material-ui/core/Button"
 import Paper from "@material-ui/core/Paper"
-import { visuallyHidden } from "@material-ui/utils"
-import { wrapper } from "../../../store"
 import dbConnect from "../../../utils/dbConnect"
 import Tag from "../../../models/tagModel.js"
+
 import {
   getTags,
   setTags,
@@ -29,6 +24,10 @@ import moment from "moment"
 import CreateModat from "../../../components/Admin/tags/CreateModat.js"
 import DeleteConfirmModal from "../../../components/Admin/DeleteConfirmModal"
 import EditModal from "../../../components/Admin/tags/EditModal"
+import AdminTableHead from "../../../components/Admin/AdminTableHead"
+import { wrapper } from "../../../store"
+import Button from "@material-ui/core/Button"
+
 const useStyles = makeStyles((theme) => ({
   topBtnsWrapp: {
     margin: "15px 0",
@@ -62,53 +61,6 @@ const headCells = [
     label: "Actions",
   },
 ]
-
-function EnhancedTableHead(props) {
-  const { order, orderBy, onRequestSort } = props
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property)
-  }
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={"left"}
-            padding={"normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            {headCell.sortable && (
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </Box>
-                ) : null}
-              </TableSortLabel>
-            )}
-            {!headCell.sortable && <span>{headCell.label}</span>}
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  )
-}
-
-EnhancedTableHead.propTypes = {
-  onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-}
 
 let initPerPage = 5
 
@@ -183,7 +135,7 @@ const Tags = () => {
   }
 
   const handleDeleteConfirm = async () => {
-    dispatch(deleteTag(currentRow.id))
+    await dispatch(deleteTag(currentRow.id))
     await dispatch(getTags(page + 1, rowsPerPage, order, orderBy))
     setOpenDeleteConfirmModal(false)
   }
@@ -199,7 +151,7 @@ const Tags = () => {
 
   const handleEditSubmit = async () => {
     //console.log(currentRow)
-    dispatch(editTag(currentRow))
+    await dispatch(editTag(currentRow))
     await dispatch(getTags(page + 1, rowsPerPage, order, orderBy))
     setOpenEditModal(false)
   }
@@ -241,7 +193,8 @@ const Tags = () => {
               aria-labelledby="tableTitle"
               size={"medium"}
             >
-              <EnhancedTableHead
+              <AdminTableHead
+                headCells={headCells}
                 order={order}
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}

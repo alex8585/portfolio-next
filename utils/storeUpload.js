@@ -9,23 +9,43 @@ import getConfig from "next/config"
  * @returns {Promise<string>} Resolves the stored file name.
  */
 
-const serverPath = (staticFilePath = "") => {
-  return path.join(getConfig().serverRuntimeConfig.PROJECT_ROOT, staticFilePath)
+export const serverPath = (fileName = "") => {
+  return path.join(getConfig().serverRuntimeConfig.PROJECT_ROOT, fileName)
 }
 
-export default async function storeUpload(upload) {
+export const getTmpUploadsPath = (fileName = "") => {
+  return serverPath("/public/uploads/tmp/" + fileName)
+}
+
+export const getUploadsPath = (fileName = "") => {
+  return serverPath("/public/uploads/" + fileName)
+}
+
+export const getTmpImgUrl = (fileName = "") => {
+  return "/uploads/tmp/" + fileName
+}
+
+export const getImgUrl = (fileName = "") => {
+  return "/uploads/" + fileName
+}
+
+export const pathByUrl = (url) => {
+  return serverPath(path.join("/public/", url))
+}
+
+export const storeUpload = async (upload) => {
   const { createReadStream, filename } = await upload
   const stream = createReadStream()
   const storedFileName = `${shortId.generate()}-${filename}`
 
-  const storedFileUrl = serverPath("/public/uploads/1/" + storedFileName)
-
-  console.log(serverPath("/public/uploads/1/" + storedFileName))
+  const storedPath = getTmpUploadsPath(storedFileName)
+  const storedUrl = getTmpImgUrl(storedFileName)
+  //console.log(serverPath("/public/uploads/tmp/" + storedFileName))
 
   // Store the file in the filesystem.
   await new Promise((resolve, reject) => {
     // Create a stream to which the upload will be written.
-    const writeStream = createWriteStream(storedFileUrl)
+    const writeStream = createWriteStream(storedPath)
 
     // When the upload is fully written, resolve the promise.
     writeStream.on("finish", resolve)
@@ -47,5 +67,5 @@ export default async function storeUpload(upload) {
     stream.pipe(writeStream)
   })
 
-  return storedFileName
+  return [storedPath, storedUrl, storedFileName]
 }

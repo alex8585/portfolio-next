@@ -4,21 +4,21 @@ import { initializeApollo } from "../apollo/client"
 const client = initializeApollo()
 
 const UPLOAD_FILE_QUERY = gql`
-  mutation UploadFile($a: String, $file: Upload!) {
-    uploadFile(file: $file, a: $a) {
-      filename
+  mutation UploadFile($file: Upload!) {
+    uploadFile(file: $file) {
+      url
+      name
     }
   }
 `
 
 export const uploadFileRequest = async (file) => {
-  console.log(file.name)
-
   let res = await client.query({
     query: UPLOAD_FILE_QUERY,
-    variables: { a: "sss", file },
+    variables: { file },
     fetchPolicy: "no-cache",
   })
-
-  return res
+  let uploadedFile = res.data.uploadFile
+  //console.log(uploadedFile)
+  return uploadedFile
 }

@@ -24,6 +24,7 @@ const PORTFOLIOS_QUERY = gql`
       img
       url
       createdTs
+      order_number
       tags {
         id
         name
@@ -34,15 +35,15 @@ const PORTFOLIOS_QUERY = gql`
 
 const CREATE_PORTFOLIO_QUERY = gql`
   mutation CreatePortfolioHandler(
-    $img: String
     $name: String
     $url: String
     $tags: [tagInput]
     $order_number: String
+    $uploadedFile: String
   ) {
     createPortfolio(
       name: $name
-      img: $img
+      uploadedFile: $uploadedFile
       url: $url
       tags: $tags
       order_number: $order_number
@@ -55,6 +56,28 @@ const CREATE_PORTFOLIO_QUERY = gql`
 const DELETE_PORTFOLIO_QUERY = gql`
   mutation DeletePortfolio($id: ID!) {
     deletePortfolio(id: $id) {
+      error
+      success
+    }
+  }
+`
+const EDIT_PORTFOLIO_QUERY = gql`
+  mutation EditPortfolio(
+    $id: ID!
+    $name: String
+    $url: String
+    $tags: [tagInput]
+    $order_number: Int
+    $uploadedFile: String
+  ) {
+    editPortfolio(
+      id: $id
+      name: $name
+      uploadedFile: $uploadedFile
+      url: $url
+      tags: $tags
+      order_number: $order_number
+    ) {
       error
       success
     }
@@ -96,6 +119,17 @@ export const deletePortfolioRequest = async (id) => {
   let res = await client.query({
     query: DELETE_PORTFOLIO_QUERY,
     variables: { id },
+    fetchPolicy: "no-cache",
+  })
+
+  return res
+}
+
+export const editPortfolioRequest = async (values) => {
+  //console.log(values)
+  let res = await client.query({
+    query: EDIT_PORTFOLIO_QUERY,
+    variables: values,
     fetchPolicy: "no-cache",
   })
 

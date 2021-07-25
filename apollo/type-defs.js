@@ -2,10 +2,11 @@ import { gql } from "@apollo/client"
 
 export const typeDefs = gql`
   scalar FileUpload
+  scalar Upload
   type File {
-    filename: String!
-    mimetype: String!
-    encoding: String!
+    path: String
+    url: String
+    name: String
   }
 
   type Tag {
@@ -24,6 +25,7 @@ export const typeDefs = gql`
     updatedAt: String
     createdTs: Float
     tags: [Tag]
+    order_number: Int
   }
 
   type User {
@@ -79,9 +81,18 @@ export const typeDefs = gql`
       url: String
       tags: [tagInput]
       order_number: String
+      uploadedFile: String
     ): ActionResponce
-
+    editPortfolio(
+      id: ID!
+      img: String
+      name: String
+      url: String
+      tags: [tagInput]
+      order_number: Int
+      uploadedFile: String
+    ): ActionResponce
     deletePortfolio(id: ID!): ActionResponce
-    uploadFile(a: String, file: FileUpload!): File!
+    uploadFile(file: Upload!): File!
   }
 `
