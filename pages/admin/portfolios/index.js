@@ -31,6 +31,8 @@ import Tag from "../../../models/tagModel.js"
 import { getTags, setTags } from "../../../actions/tagActions"
 import AdminTableHead from "../../../components/Admin/AdminTableHead"
 
+import { getImgUrl } from "@/utils/utils"
+
 const useStyles = makeStyles((theme) => ({
   topBtnsWrapp: {
     margin: "15px 0",
@@ -224,10 +226,8 @@ const Portfolios = () => {
                       <TableCell> {row.id}</TableCell>
                       <TableCell> {row.name}</TableCell>
                       <TableCell>
-                        <Image
-                          src={
-                            row.img ? "/" + row.img.replace(/^\/+/g, "") : ""
-                          }
+                        <img
+                          src={getImgUrl(row.img)}
                           alt={row.name}
                           width={100}
                           height={75}

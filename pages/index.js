@@ -35,7 +35,7 @@ import FrontendLayout from "../components/FrontendLayout"
 import Head from "next/head"
 import Lightbox from "react-image-lightbox"
 import "react-image-lightbox/style.css"
-
+import { getImgUrl } from "@/utils/utils"
 const useStyles = makeStyles((theme) => ({
   "@global": {
     ul: {
@@ -222,14 +222,14 @@ const Index = ({ match, location, history, staticTags }) => {
                   subheader=""
                   className={classes.cardHeader}
                 />
-                {images.push("/" + portfolio.img) && ""}
-                <Image
+                {images.push(getImgUrl(portfolio.img)) && ""}
+                <img
                   className={classes.image}
                   onClick={() => setCurrentImage(i)}
-                  src={"/" + portfolio.img}
+                  src={getImgUrl(portfolio.img)}
                   alt={portfolio.name}
-                  width={400}
-                  height={300}
+                  width={300}
+                  height={200}
                 />
                 <CardContent>
                   <Typography

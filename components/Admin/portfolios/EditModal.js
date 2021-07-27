@@ -141,7 +141,7 @@ export default function EditModal({
             value={uploadedFile.name}
           ></input>
           {uploadedFile.url && (
-            <Image
+            <img
               onClick={() => handleChangeRow(i)}
               src={uploadedFile.url}
               alt="Uploaded img"

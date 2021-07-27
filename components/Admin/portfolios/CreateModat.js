@@ -15,7 +15,7 @@ import Box from "@material-ui/core/Box"
 import React, { useState } from "react"
 import { uploadFileRequest } from "../../../providers/filesProveder"
 import Image from "next/image"
-
+import { getImgUrl } from "@/utils/utils"
 export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
   const inititalValues = {
     name: "",
@@ -130,9 +130,9 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
             value={uploadedFile.name}
           ></input>
           {uploadedFile.url && (
-            <Image
+            <img
               onClick={() => setCurrentImage(i)}
-              src={uploadedFile.url}
+              src={getImgUrl(uploadedFile.url)}
               alt="Uploaded img"
               width={400}
               height={300}

@@ -1,7 +1,9 @@
 import { createWriteStream, unlink } from "fs"
 import shortId from "shortid"
 import path from "path"
-import getConfig from "next/config"
+import { fileURLToPath } from "url"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /**
  * Stores a GraphQL file upload in the filesystem.
@@ -10,9 +12,9 @@ import getConfig from "next/config"
  */
 
 export const serverPath = (fileName = "") => {
-  return path.join(getConfig().serverRuntimeConfig.PROJECT_ROOT, fileName)
+  return path.join(__dirname, "../", fileName)
 }
-
+//console.log(serverPath())
 export const getTmpUploadsPath = (fileName = "") => {
   return serverPath("/public/uploads/tmp/" + fileName)
 }

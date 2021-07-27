@@ -30,3 +30,8 @@ export const getUserTokenFromLocalStorage = () => {
 export const deleteUserFromLocalStorage = () => {
   localStorage.removeItem("user")
 }
+
+export function getImgUrl(img = "") {
+  img = img.replace(/^\/+/g, "")
+  return process.env.NEXT_PUBLIC_UPLOADS_URL + img
+}
