@@ -58,7 +58,7 @@ export const listPortfolios =
     try {
       dispatch({ type: PORTFOLIO_LIST_REQUEST })
 
-      let data = await getList(perPage, page, filter)
+      let data = await getList(perPage, page, "", "", filter)
 
       dispatch({
         type: PORTFOLIO_LIST_SUCCESS,

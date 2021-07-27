@@ -4,9 +4,9 @@ import { setContext } from "@apollo/client/link/context"
 import { getUserTokenFromLocalStorage } from "../utils/utils"
 import { createUploadLink } from "apollo-upload-client"
 let apolloClient
-
+const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL
 const httpLink = createUploadLink({
-  uri: "/api/graphql",
+  uri: GRAPHQL_URL,
   headers: {
     "keep-alive": "true",
   },

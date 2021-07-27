@@ -3,6 +3,7 @@ import Tag from "../models/tagModel.js"
 import User from "../models/userModel.js"
 import { generateToken } from "../utils/utils.js"
 import fs from "fs"
+
 //import mongoose from "mongoose"
 import {
   storeUpload,
@@ -10,7 +11,7 @@ import {
   getUploadsPath,
   getImgUrl,
   pathByUrl,
-} from "../utils/storeUpload"
+} from "../utils/storeUpload.js"
 
 import { GraphQLUpload } from "graphql-upload"
 
@@ -27,7 +28,6 @@ function getFilterObj(filter) {
 
 export const resolvers = {
   FileUpload: GraphQLUpload,
-  Upload: GraphQLUpload,
   Query: {
     async getTags(parent, args, context, info) {
       const { perPage, filter, page, direction, order } = args

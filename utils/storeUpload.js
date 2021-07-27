@@ -53,7 +53,7 @@ export const storeUpload = async (upload) => {
     // If there's an error writing the file, remove the partially written file
     // and reject the promise.
     writeStream.on("error", (error) => {
-      unlink(storedFileUrl, () => {
+      unlink(storedPath, () => {
         reject(error)
       })
     })
