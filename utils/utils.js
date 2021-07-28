@@ -33,5 +33,8 @@ export const deleteUserFromLocalStorage = () => {
 
 export function getImgUrl(img = "") {
   img = img.replace(/^\/+/g, "")
+  if (!img) {
+    return null
+  }
   return process.env.NEXT_PUBLIC_UPLOADS_URL + img
 }

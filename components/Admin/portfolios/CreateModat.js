@@ -104,7 +104,6 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
       handleSubmit(sendData)
     }
   }
-
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
@@ -114,7 +113,7 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
             error={errors.name ? true : false}
             onChange={(e) => handleChange(e)}
             name="name"
-            autoFocus
+            //autoFocus
             margin="dense"
             id="name"
             label="Name"
@@ -131,7 +130,6 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
           ></input>
           {uploadedFile.url && (
             <img
-              onClick={() => setCurrentImage(i)}
               src={getImgUrl(uploadedFile.url)}
               alt="Uploaded img"
               width={400}
@@ -142,7 +140,6 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
             error={errors.img ? true : false}
             onChange={(e) => handleChangeFile(e)}
             name="img"
-            autoFocus
             margin="dense"
             id="img"
             label="Image"
@@ -157,7 +154,6 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
             error={errors.url ? true : false}
             onChange={(e) => handleChange(e)}
             name="url"
-            autoFocus
             margin="dense"
             id="url"
             label="Url"
@@ -172,7 +168,6 @@ export default function CreateModat({ open, handleClose, handleSubmit, tags }) {
             error={errors.order_number ? true : false}
             onChange={(e) => handleChange(e)}
             name="order_number"
-            autoFocus
             margin="dense"
             id="order_number"
             label="Order"

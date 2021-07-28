@@ -157,7 +157,7 @@ const Tags = () => {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout title="Tags">
       <CreateModat
         handleSubmit={createSubminHanler}
         open={openCreateModal}
@@ -267,7 +267,8 @@ export const getStaticProps = wrapper.getStaticProps(
       let total = await Tag.countDocuments()
       tags = JSON.parse(JSON.stringify(tags))
       await store.dispatch(setTags(tags, total))
-      return null
+
+      return { revalidate: 1 }
     }
 )
 

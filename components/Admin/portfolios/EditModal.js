@@ -13,6 +13,8 @@ import Chip from "@material-ui/core/Chip"
 import Box from "@material-ui/core/Box"
 import OutlinedInput from "@material-ui/core/OutlinedInput"
 
+import { uploadFileRequest } from "../../../providers/filesProveder"
+import { getImgUrl } from "@/utils/utils"
 export default function EditModal({
   open,
   handleClose,
@@ -52,27 +54,28 @@ export default function EditModal({
 
   const handleChangeFile = async (e) => {
     let file = e.target.files[0]
-    const uploadedFile = await uploadFileRequest(file)
+    let uploadedFile = await uploadFileRequest(file)
     setUploadedFile(uploadedFile)
   }
 
   function handleChangeSelect(e) {
     const tags = e.target.value
-    let diff = tags.filter((x) => !values.tags.includes(x))
+    let currentTags = [...currentRow.tags]
+
+    let diff = tags.filter((x) => !currentTags.includes(x))
     let newElem = diff[0]
     let newElemId = newElem.id
-    const found = values.tags.find((element) => element.id == newElemId)
-    let newTagsArr = [...values.tags]
+    const found = currentTags.find((element) => element.id == newElemId)
 
     if (found) {
-      newTagsArr = newTagsArr.filter((e) => e.id !== newElemId)
+      currentTags = currentTags.filter((e) => e.id !== newElemId)
     } else {
-      newTagsArr.push(newElem)
+      currentTags.push(newElem)
     }
 
-    setValues((values) => ({
-      ...values,
-      tags: newTagsArr,
+    setCurrentRow((currentRow) => ({
+      ...currentRow,
+      tags: currentTags,
     }))
   }
 
@@ -110,14 +113,21 @@ export default function EditModal({
         uploadedFile: uploadedFile.name,
       }
       //setValues(inititalValues)
-      //setUploadedFile(fileInitialValue)
+      //console.log(sendData)
       handleSubmit(sendData)
     }
   }
-  //console.log(currentRow)
+
+  const onHandleClose = () => {
+    setUploadedFile(fileInitialValue)
+    handleClose()
+  }
+
+  let currentFileUrl = getImgUrl(currentRow.img)
+
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={onHandleClose}>
         <DialogTitle>Edit portfolio</DialogTitle>
 
         <DialogContent>
@@ -125,7 +135,6 @@ export default function EditModal({
             error={errors.name ? true : false}
             onChange={(e) => handleChangeRow(e)}
             name="name"
-            autoFocus
             margin="dense"
             id="name"
             label="Name"
@@ -135,15 +144,22 @@ export default function EditModal({
             value={currentRow.name}
             helperText={errors.name}
           />
-          {/* <input
+          <input
             type="hidden"
             name="uploadedFile"
             value={uploadedFile.name}
           ></input>
           {uploadedFile.url && (
             <img
-              onClick={() => handleChangeRow(i)}
-              src={uploadedFile.url}
+              src={getImgUrl(uploadedFile.url)}
+              alt="Uploaded img"
+              width={400}
+              height={300}
+            />
+          )}
+          {currentFileUrl && !uploadedFile.url && (
+            <img
+              src={currentFileUrl}
               alt="Uploaded img"
               width={400}
               height={300}
@@ -151,24 +167,21 @@ export default function EditModal({
           )}
           <TextField
             error={errors.img ? true : false}
-            onChange={(e) => handleChangeRow(e)}
+            onChange={(e) => handleChangeFile(e)}
             name="img"
-            autoFocus
             margin="dense"
             id="img"
             label="Image"
             type="file"
             fullWidth
             variant="standard"
-            value={currentRow.img}
             helperText={errors.img}
-          /> */}
+          />
 
           <TextField
             error={errors.url ? true : false}
             onChange={(e) => handleChangeRow(e)}
             name="url"
-            autoFocus
             margin="dense"
             id="url"
             label="Url"
@@ -183,7 +196,6 @@ export default function EditModal({
             error={errors.order_number ? true : false}
             onChange={(e) => handleChangeRow(e)}
             name="order_number"
-            autoFocus
             margin="dense"
             id="order_number"
             label="Order"
@@ -194,8 +206,8 @@ export default function EditModal({
             helperText={errors.order_number}
           />
           <FormControl sx={{ m: 1, width: 300 }}>
-            {/* <Select
             <InputLabel id="multiple-tags-label">Tags</InputLabel>
+            <Select
               name="tags"
               labelId="multiple-tags-label"
               id="multiple-tags"
@@ -216,11 +228,11 @@ export default function EditModal({
                   {tag.name}
                 </MenuItem>
               ))}
-            </Select> */}
+            </Select>
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={onHandleClose}>Cancel</Button>
           <Button onClick={() => handleValidateAndSubmit(currentRow)}>
             Save
           </Button>

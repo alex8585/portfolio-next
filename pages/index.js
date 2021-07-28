@@ -323,7 +323,7 @@ export const getStaticProps = wrapper.getStaticProps(
       await store.dispatch(setTags(tags))
       await store.dispatch(setPortfolios(portfolios, perPage, total))
 
-      return null
+      return { revalidate: 1 }
     }
 )
 

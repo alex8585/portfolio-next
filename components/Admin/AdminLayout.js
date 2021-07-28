@@ -6,7 +6,7 @@ import Head from "next/head"
 import useUser from "../../hooks/useUser"
 import { useRouter } from "next/router"
 
-function AdminLayout({ children }) {
+function AdminLayout({ children, title }) {
   const [user, userLoaded] = useUser()
   const router = useRouter()
 
@@ -21,7 +21,7 @@ function AdminLayout({ children }) {
   return (
     <Box sx={{ display: "flex" }}>
       <Head>{/* <link rel="favicon icon" href="favicon.ico" /> */}</Head>
-      <AdminMenu />
+      <AdminMenu title={title} />
       <Box
         component="main"
         sx={{

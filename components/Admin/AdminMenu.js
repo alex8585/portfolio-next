@@ -14,8 +14,18 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import NotificationsIcon from "@material-ui/icons/Notifications"
 import LeftMenu from "./LeftMenu"
 import AccountMenu from "./AccountMenu"
-const drawerWidth = 240
 
+import { makeStyles } from "@material-ui/styles"
+import Link from "next/link"
+
+const useStyles = makeStyles((theme) => ({
+  url: {
+    color: "#fff",
+    textDecoration: "none",
+  },
+}))
+
+const drawerWidth = 240
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -59,12 +69,12 @@ const Drawer = styled(MuiDrawer, {
     }),
   },
 }))
-function AdminMenu() {
+function AdminMenu({ title = "Dashboard" }) {
   const [open, setOpen] = useState(true)
   const toggleDrawer = () => {
     setOpen(!open)
   }
-
+  const classes = useStyles()
   return (
     <>
       <CssBaseline />
@@ -93,9 +103,13 @@ function AdminMenu() {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Dashboard
+            {title}
           </Typography>
-          
+          <Link href="/">
+            <a target="_blank" className={classes.url}>
+              Frontend
+            </a>
+          </Link>
           <AccountMenu />
         </Toolbar>
       </AppBar>

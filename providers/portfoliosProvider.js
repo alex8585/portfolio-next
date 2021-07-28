@@ -126,7 +126,6 @@ export const deletePortfolioRequest = async (id) => {
 }
 
 export const editPortfolioRequest = async (values) => {
-  //console.log(values)
   let res = await client.query({
     query: EDIT_PORTFOLIO_QUERY,
     variables: values,

@@ -164,14 +164,13 @@ const Portfolios = () => {
     setOpenEditModal(false)
   }
 
-  const handleEditSubmit = async () => {
-    console.log(currentRow)
-    await dispatch(editPortfolio(currentRow))
+  const handleEditSubmit = async (sendData) => {
+    await dispatch(editPortfolio(sendData))
     await dispatch(getPortfolios(page + 1, rowsPerPage, order, orderBy))
     setOpenEditModal(false)
   }
   return (
-    <AdminLayout>
+    <AdminLayout title="Portfolios">
       <CreateModat
         tags={tags}
         handleSubmit={createSubminHanler}
@@ -299,7 +298,7 @@ export const getStaticProps = wrapper.getStaticProps(
       await store.dispatch(setPortfolios(portfolios, initPerPage, total))
       await store.dispatch(setTags(tags, totalTags))
 
-      return null
+      return { revalidate: 1 }
     }
 )
 

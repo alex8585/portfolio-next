@@ -24,7 +24,7 @@ const authLink = setContext((_, { headers }) => {
 
 function createIsomorphLink() {
   if (typeof window === "undefined") {
-    console.log("error window undefined")
+    //console.log("error window undefined")
     // const { SchemaLink } = require("@apollo/client/link/schema")
     // const { schema } = require("./schema")
     // return new SchemaLink({ schema })
